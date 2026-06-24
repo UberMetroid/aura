@@ -57,7 +57,7 @@ The repository uses six GitHub Actions workflows for continuous integration, dep
 | `ci.yml` | Push/PR to `main` or `master` | Full lint (`npm run lint`), format check (`npm run format`), and Vitest test suite |
 | `on-push-to-main.yml` | Push to `main` | Delegates to `reusable-check-docker.yml` |
 | `on-pull-request-to-main.yml` | PR opened/synced/reopened to `main` | Delegates to `reusable-check-docker.yml`; skippable via `skip-check-docker` label |
-| `publish-docker-image.yml` | Manual (`workflow_dispatch`) | Builds multi-platform Docker image (linux/amd64, linux/arm64) and pushes to `ghcr.io` |
+| `publish-docker-image.yml` | Manual (`workflow_dispatch`) | Builds multi-platform Docker image (linux/amd64, linux/arm64) and pushes to `Docker Hub (ubermetroid)` |
 | `deploy-to-hugging-face.yml` | Manual (`workflow_dispatch`) | Syncs repository to Hugging Face Spaces using `JacobLinCool/huggingface-sync` |
 | `reusable-check-docker.yml` | Called by other workflows | Docker compose production build + health check via `curl localhost:7860` (lint/format/test are covered by `ci.yml`) |
 
@@ -73,7 +73,7 @@ The Docker image uses a multi-stage build:
 1. **Builder stage** (`llama-builder`): Compiles llama-server from llama.cpp source, extracts shared libraries (`libllama.so`, `libmtmd.so`, `libggml.so`, etc.)
 2. **Runtime stage**: Installs Python/SearXNG, copies llama-server binaries, builds the Vite frontend, runs SearXNG and Node.js in a single container via shell process composition
 
-The production image is published to `ghcr.io` with multi-platform support (linux/amd64, linux/arm64). Tags and labels are auto-generated from Git metadata via `docker/metadata-action`.
+The production image is published to `Docker Hub (ubermetroid)` with multi-platform support (linux/amd64, linux/arm64). Tags and labels are auto-generated from Git metadata via `docker/metadata-action`.
 
 ### Manual Deployments
 
