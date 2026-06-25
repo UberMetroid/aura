@@ -166,7 +166,7 @@ pub fn App() -> impl IntoView {
                             };
                             if let Err(e) = api::stream_inference(&chat_req, move |content| {
                                 let mut current = ai_response.get();
-                                current.push_str(&content);
+                                current.push_str(content);
 
                                 let mut stripped = current.as_str();
                                 loop {
