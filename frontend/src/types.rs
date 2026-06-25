@@ -7,13 +7,6 @@ pub struct TextSearchResult {
     pub url: String,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq, Eq)]
-pub struct ImageSearchResult {
-    pub title: String,
-    pub url: String,
-    pub thumbnail: String,
-    pub source_url: String,
-}
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub struct ChatMessage {

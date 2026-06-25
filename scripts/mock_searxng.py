@@ -27,23 +27,52 @@ class MockSearxngHandler(BaseHTTPRequestHandler):
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
             
-            # Return custom simulated search results based on user query
-            response_data = {
-                "results": [
-                    {
-                        "title": f"Metasearch result 1 for query: '{q}'",
-                        "url": "https://example.com/details-1",
-                        "content": f"Here is high-quality aggregated context regarding the search term '{q}'. This is served by the local mock SearXNG mock server.",
-                        "category": categories
-                    },
-                    {
-                        "title": f"Metasearch result 2 for query: '{q}'",
-                        "url": "https://example.com/details-2",
-                        "content": f"More details and simulated search info for '{q}'. Local testing is functional and fast.",
-                        "category": categories
-                    }
-                ]
-            }
+            if "images" in categories:
+                response_data = {
+                    "results": [
+                        {
+                            "title": f"Sailor Moon Cover - Query: {q}",
+                            "url": "https://en.wikipedia.org/wiki/Sailor_Moon",
+                            "content": "Sailor Moon Volume 1 cover artwork",
+                            "category": "images",
+                            "thumbnail_src": "https://picsum.photos/id/102/300/300",
+                            "img_src": "https://picsum.photos/id/102/600/600"
+                        },
+                        {
+                            "title": f"Sailor Mercury - Query: {q}",
+                            "url": "https://en.wikipedia.org/wiki/Sailor_Mercury",
+                            "content": "Sailor Mercury character portrait",
+                            "category": "images",
+                            "thumbnail_src": "https://picsum.photos/id/203/300/300",
+                            "img_src": "https://picsum.photos/id/203/600/600"
+                        },
+                        {
+                            "title": f"Sailor Mars - Query: {q}",
+                            "url": "https://en.wikipedia.org/wiki/Sailor_Mars",
+                            "content": "Sailor Mars character portrait",
+                            "category": "images",
+                            "thumbnail_src": "https://picsum.photos/id/304/300/300",
+                            "img_src": "https://picsum.photos/id/304/600/600"
+                        }
+                    ]
+                }
+            else:
+                response_data = {
+                    "results": [
+                        {
+                            "title": f"Metasearch result 1 for query: '{q}'",
+                            "url": "https://example.com/details-1",
+                            "content": f"Here is high-quality aggregated context regarding the search term '{q}'. This is served by the local mock SearXNG mock server.",
+                            "category": categories
+                        },
+                        {
+                            "title": f"Metasearch result 2 for query: '{q}'",
+                            "url": "https://example.com/details-2",
+                            "content": f"More details and simulated search info for '{q}'. Local testing is functional and fast.",
+                            "category": categories
+                        }
+                    ]
+                }
             self.wfile.write(json.dumps(response_data).encode('utf-8'))
             return
             

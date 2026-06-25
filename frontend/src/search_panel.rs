@@ -1,5 +1,5 @@
 use crate::i18n::{translate, Locale, TransKey};
-use crate::types::{ImageSearchResult, TextSearchResult};
+use crate::types::TextSearchResult;
 use leptos::*;
 
 #[component]
@@ -7,14 +7,14 @@ pub fn SearchPanel<F>(
     locale: ReadSignal<Locale>,
     query_input: ReadSignal<String>,
     set_query_input: WriteSignal<String>,
-    search_type: ReadSignal<String>,
-    set_search_type: WriteSignal<String>,
     is_loading: ReadSignal<bool>,
     ai_response: ReadSignal<String>,
     is_generating: ReadSignal<bool>,
     text_results: ReadSignal<Vec<TextSearchResult>>,
-    image_results: ReadSignal<Vec<ImageSearchResult>>,
     on_search: F,
+    invoke_image: ReadSignal<Option<String>>,
+    invoke_loading: ReadSignal<bool>,
+    invoke_error: ReadSignal<Option<String>>,
 ) -> impl IntoView
 where
     F: Fn(ev::SubmitEvent) + 'static + Copy,
@@ -23,19 +23,56 @@ where
 
     view! {
         <main class="main-content">
-            // AI Response Section
+            // AI Response Section (AI Overview and AI Image side-by-side)
             {move || has_ai().then(|| view! {
                 <section class="ai-response-section">
-                    <div class="ai-response-card">
-
-                        <div class="ai-text">
-                            {move || if ai_response.get().is_empty() && is_generating.get() {
-                                view! { <span class="ai-thinking">{translate(TransKey::ThinkingMsg, locale.get())}</span> }.into_view()
-                             } else {
-                                view! { {ai_response.get()} }.into_view()
-                             }}
-                            {move || is_generating.get().then(|| view! { <span class="cursor-blink">"▌"</span> })}
+                    <div class="ai-split-layout">
+                        <div class="ai-response-card">
+                            <div class="ai-text">
+                                {move || if ai_response.get().is_empty() && is_generating.get() {
+                                    view! {
+                                        <span class="ai-thinking">
+                                            {translate(TransKey::ThinkingMsg, locale.get())}
+                                            <span class="dot-bounce">"."</span>
+                                            <span class="dot-bounce dot-2">"."</span>
+                                            <span class="dot-bounce dot-3">"."</span>
+                                        </span>
+                                    }.into_view()
+                                 } else {
+                                    view! { {ai_response.get()} }.into_view()
+                                 }}
+                                {move || is_generating.get().then(|| view! { <span class="cursor-blink">"▌"</span> })}
+                            </div>
                         </div>
+
+                        // InvokeAI Image Card
+                        {move || {
+                            let loading = invoke_loading.get();
+                            let img_opt = invoke_image.get();
+                            let err_opt = invoke_error.get();
+                            (loading || img_opt.is_some() || err_opt.is_some()).then(|| view! {
+                                <div class="invoke-image-card">
+                                    {if loading {
+                                        view! {
+                                            <div class="invoke-loading-container">
+                                                <div class="invoke-spinner"></div>
+                                                <span class="invoke-loading-text">"Generating image..."</span>
+                                            </div>
+                                        }.into_view()
+                                    } else if let Some(err) = err_opt {
+                                        view! { <div class="invoke-error-text">{err}</div> }.into_view()
+                                    } else if let Some(img_url) = img_opt {
+                                        view! {
+                                            <a href=img_url.clone() target="_blank">
+                                                <img src=img_url.clone() alt="AI Generated Illustration" class="invoke-img" />
+                                            </a>
+                                        }.into_view()
+                                    } else {
+                                        view! {}.into_view()
+                                    }}
+                                </div>
+                            })
+                        }}
                     </div>
                 </section>
             })}
@@ -56,28 +93,6 @@ where
                             {move || if is_loading.get() { translate(TransKey::SearchingBtn, locale.get()) } else { translate(TransKey::SearchBtn, locale.get()) }}
                         </button>
                     </div>
-                    <div class="search-type-selector">
-                        <label class=move || if search_type.get() == "text" { "active" } else { "" }>
-                            <input
-                                type="radio"
-                                name="search_type"
-                                value="text"
-                                checked=move || search_type.get() == "text"
-                                on:change=move |_| set_search_type.set("text".to_string())
-                            />
-                            {move || translate(TransKey::WebSearchOption, locale.get())}
-                        </label>
-                        <label class=move || if search_type.get() == "images" { "active" } else { "" }>
-                            <input
-                                type="radio"
-                                name="search_type"
-                                value="images"
-                                checked=move || search_type.get() == "images"
-                                on:change=move |_| set_search_type.set("images".to_string())
-                            />
-                            {move || translate(TransKey::ImageSearchOption, locale.get())}
-                        </label>
-                    </div>
                 </form>
             </div>
 
@@ -96,23 +111,7 @@ where
                     </div>
                 </section>
             })}
-
-            // Image Search Results
-            {move || (!image_results.get().is_empty()).then(|| view! {
-                <section class="image-results-list">
-                    <h3>{move || translate(TransKey::ImageResultsTitle, locale.get())}</h3>
-                    <div class="image-grid">
-                        {move || image_results.get().into_iter().map(|res| view! {
-                            <div class="image-item">
-                                <a href=res.url target="_blank" title=res.title.clone()>
-                                    <img src=res.thumbnail alt=res.title.clone() class="image-thumbnail" />
-                                </a>
-                                <a href=res.source_url target="_blank" class="image-source-link">{move || translate(TransKey::SourceLink, locale.get())}</a>
-                            </div>
-                        }).collect::<Vec<_>>()}
-                    </div>
-                </section>
-            })}
         </main>
     }
 }
+

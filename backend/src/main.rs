@@ -20,6 +20,7 @@ mod grokipedia;
 mod handlers;
 mod inference;
 mod merged;
+mod invoke;
 mod search;
 mod searxng;
 mod status;
@@ -137,6 +138,9 @@ async fn main() {
         .route("/search/text", get(handlers::handle_search_text))
         .route("/search/images", get(handlers::handle_search_images))
         .route("/inference", post(handlers::handle_inference_endpoint))
+        .route("/api/generate-invoke-image", post(invoke::handle_generate_invoke_image))
+        .route("/api/invoke-image-status/:item_id", get(invoke::handle_invoke_image_status))
+        .route("/api/invoke-image-file/:image_name", get(invoke::handle_invoke_image_file))
         .with_state(state.clone());
 
     let static_service =
@@ -171,9 +175,7 @@ async fn response_headers_middleware(
     let path = req.uri().path().to_string();
     let is_api = path.starts_with("/search/")
         || path.starts_with("/status")
-        || path == "/api/pin-required"
-        || path == "/api/verify-pin"
-        || path == "/api/logout"
+        || path.starts_with("/api/")
         || path.starts_with("/inference");
 
     let mut response = next.run(req).await;
@@ -192,7 +194,11 @@ async fn response_headers_middleware(
         HeaderValue::from_static("cross-origin"),
     );
 
-    if !is_api {
+    if is_api {
+        if let Ok(val) = HeaderValue::from_str("no-store, no-cache, must-revalidate, proxy-revalidate") {
+            headers.insert("Cache-Control", val);
+        }
+    } else {
         let cache_control = if path.starts_with("/assets/") {
             "public, max-age=31536000, immutable"
         } else if path == "/" || path.ends_with(".html") {

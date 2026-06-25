@@ -1,10 +1,12 @@
-use crate::types::{ChatCompletionRequest, ImageSearchResult, TextSearchResult};
+use crate::types::{ChatCompletionRequest, TextSearchResult};
 use gloo_net::http::Request;
 
 pub struct AuthStatus {
     pub pin_required: bool,
     pub is_authorized: bool,
     pub enable_translation: bool,
+    pub enable_themes: bool,
+    pub enable_print: bool,
 }
 
 pub async fn check_auth_status() -> Result<AuthStatus, String> {
@@ -24,11 +26,21 @@ pub async fn check_auth_status() -> Result<AuthStatus, String> {
         .get("enable_translation")
         .and_then(|v| v.as_bool())
         .unwrap_or(true);
+    let enable_themes = data
+        .get("enable_themes")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(true);
+    let enable_print = data
+        .get("enable_print")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(true);
     if !required {
         Ok(AuthStatus {
             pin_required: false,
             is_authorized: true,
             enable_translation,
+            enable_themes,
+            enable_print,
         })
     } else {
         // Check if we are already authenticated via cookie
@@ -43,6 +55,8 @@ pub async fn check_auth_status() -> Result<AuthStatus, String> {
             pin_required: true,
             is_authorized: is_auth,
             enable_translation,
+            enable_themes,
+            enable_print,
         })
     }
 }
@@ -113,45 +127,6 @@ pub async fn search_text(query: &str) -> Result<Vec<TextSearchResult>, String> {
             title,
             snippet,
             url,
-        })
-        .collect();
-    Ok(mapped)
-}
-
-pub async fn search_images(query: &str) -> Result<Vec<ImageSearchResult>, String> {
-    let search_url = format!(
-        "/search/images?q={}&limit=12",
-        percent_encoding::utf8_percent_encode(query, percent_encoding::NON_ALPHANUMERIC)
-    );
-    let resp = Request::get(&search_url)
-        .send()
-        .await
-        .map_err(|e| e.to_string())?;
-    if resp.status() == 401 {
-        return Err("Unauthorized".to_string());
-    }
-    if !resp.ok() {
-        if let Ok(err_val) = resp.json::<serde_json::Value>().await {
-            if let Some(err_str) = err_val.get("error").and_then(|v| v.as_str()) {
-                return Err(err_str.to_string());
-            }
-        }
-        return Err(format!(
-            "Search request failed with status {}",
-            resp.status()
-        ));
-    }
-    let results = resp
-        .json::<Vec<(String, String, String, String)>>()
-        .await
-        .map_err(|e| e.to_string())?;
-    let mapped = results
-        .into_iter()
-        .map(|(title, url, thumbnail, source_url)| ImageSearchResult {
-            title,
-            url,
-            thumbnail,
-            source_url,
         })
         .collect();
     Ok(mapped)

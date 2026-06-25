@@ -1,0 +1,318 @@
+{
+  "id": "anima_graph:Us4crRXKO8",
+  "nodes": {
+    "anima_model_loader:0t38CQGoGZ": {
+      "id": "anima_model_loader:0t38CQGoGZ",
+      "is_intermediate": true,
+      "use_cache": true,
+      "model": {
+        "key": "4110338f-c205-44df-8b69-1b5d9000ab51",
+        "hash": "blake3:b10e04a8bf3a17cae4749fb064d7c610c92fd1a70c62c3201421d38f0b0a20df",
+        "name": "Anima Base 1.0",
+        "base": "anima",
+        "type": "main",
+        "submodel_type": null
+      },
+      "vae_model": {
+        "key": "0cc912a3-60be-4e12-99c0-9dd7c70d6fb4",
+        "hash": "blake3:1018b941788940c4dfc449d5d749950cae58c9a7f6a794b00a2f8321abc885d1",
+        "name": "Anima QwenImage VAE",
+        "base": "anima",
+        "type": "vae",
+        "submodel_type": null
+      },
+      "qwen3_encoder_model": {
+        "key": "d4331ff7-005c-4196-a165-c72d744c82a8",
+        "hash": "blake3:b9079c6ea657a7cb4ae9add2d24e0f8cfdaff6d2da96d7657a53676e013dede9",
+        "name": "Anima Qwen3 0.6B Text Encoder",
+        "base": "any",
+        "type": "qwen3_encoder",
+        "submodel_type": null
+      },
+      "type": "anima_model_loader"
+    },
+    "positive_prompt:yviCKA4N4f": {
+      "id": "positive_prompt:yviCKA4N4f",
+      "is_intermediate": true,
+      "use_cache": true,
+      "value": "cleavage",
+      "type": "string"
+    },
+    "pos_prompt:eRls7mTNui": {
+      "id": "pos_prompt:eRls7mTNui",
+      "is_intermediate": true,
+      "use_cache": true,
+      "prompt": null,
+      "qwen3_encoder": null,
+      "mask": null,
+      "type": "anima_text_encoder"
+    },
+    "pos_cond_collect:G1X6AubCps": {
+      "id": "pos_cond_collect:G1X6AubCps",
+      "is_intermediate": true,
+      "use_cache": true,
+      "item": null,
+      "collection": [],
+      "type": "collect"
+    },
+    "neg_prompt:AaboGyFqJb": {
+      "id": "neg_prompt:AaboGyFqJb",
+      "is_intermediate": true,
+      "use_cache": true,
+      "prompt": "",
+      "qwen3_encoder": null,
+      "mask": null,
+      "type": "anima_text_encoder"
+    },
+    "neg_cond_collect:2RlSkBXe94": {
+      "id": "neg_cond_collect:2RlSkBXe94",
+      "is_intermediate": true,
+      "use_cache": true,
+      "item": null,
+      "collection": [],
+      "type": "collect"
+    },
+    "seed:mWc1NcOCKy": {
+      "id": "seed:mWc1NcOCKy",
+      "is_intermediate": true,
+      "use_cache": true,
+      "value": 1232935988,
+      "type": "integer"
+    },
+    "denoise_latents:rrOFNjdI8q": {
+      "id": "denoise_latents:rrOFNjdI8q",
+      "is_intermediate": true,
+      "use_cache": true,
+      "latents": null,
+      "noise": null,
+      "denoise_mask": null,
+      "denoising_start": 0.0,
+      "denoising_end": 1.0,
+      "add_noise": true,
+      "transformer": null,
+      "positive_conditioning": null,
+      "negative_conditioning": null,
+      "guidance_scale": 7.5,
+      "width": 1024,
+      "height": 1024,
+      "steps": 30,
+      "seed": 0,
+      "scheduler": "euler",
+      "type": "anima_denoise"
+    },
+    "core_metadata:rbG63QczEn": {
+      "id": "core_metadata:rbG63QczEn",
+      "is_intermediate": true,
+      "use_cache": true,
+      "generation_mode": "anima_txt2img",
+      "positive_prompt": null,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seed": null,
+      "rand_device": null,
+      "cfg_scale": 7.5,
+      "cfg_rescale_multiplier": null,
+      "steps": 30,
+      "scheduler": "euler",
+      "seamless_x": null,
+      "seamless_y": null,
+      "clip_skip": null,
+      "model": {
+        "key": "4110338f-c205-44df-8b69-1b5d9000ab51",
+        "hash": "blake3:b10e04a8bf3a17cae4749fb064d7c610c92fd1a70c62c3201421d38f0b0a20df",
+        "name": "Anima Base 1.0",
+        "base": "anima",
+        "type": "main",
+        "submodel_type": null
+      },
+      "controlnets": null,
+      "ipAdapters": null,
+      "t2iAdapters": null,
+      "loras": null,
+      "strength": null,
+      "init_image": null,
+      "vae": {
+        "key": "0cc912a3-60be-4e12-99c0-9dd7c70d6fb4",
+        "hash": "blake3:1018b941788940c4dfc449d5d749950cae58c9a7f6a794b00a2f8321abc885d1",
+        "name": "Anima QwenImage VAE",
+        "base": "anima",
+        "type": "vae",
+        "submodel_type": null
+      },
+      "qwen3_encoder": {
+        "key": "d4331ff7-005c-4196-a165-c72d744c82a8",
+        "hash": "blake3:b9079c6ea657a7cb4ae9add2d24e0f8cfdaff6d2da96d7657a53676e013dede9",
+        "name": "Anima Qwen3 0.6B Text Encoder",
+        "base": "any",
+        "type": "qwen3_encoder",
+        "submodel_type": null
+      },
+      "hrf_enabled": null,
+      "hrf_method": null,
+      "hrf_strength": null,
+      "positive_style_prompt": null,
+      "negative_style_prompt": null,
+      "refiner_model": null,
+      "refiner_cfg_scale": null,
+      "refiner_steps": null,
+      "refiner_scheduler": null,
+      "refiner_positive_aesthetic_score": null,
+      "refiner_negative_aesthetic_score": null,
+      "refiner_start": null,
+      "type": "core_metadata"
+    },
+    "canvas_output:EGsk8V32wo": {
+      "board": null,
+      "metadata": null,
+      "id": "canvas_output:EGsk8V32wo",
+      "is_intermediate": false,
+      "use_cache": false,
+      "latents": null,
+      "vae": null,
+      "type": "anima_l2i"
+    }
+  },
+  "edges": [
+    {
+      "source": {
+        "node_id": "anima_model_loader:0t38CQGoGZ",
+        "field": "transformer"
+      },
+      "destination": {
+        "node_id": "denoise_latents:rrOFNjdI8q",
+        "field": "transformer"
+      }
+    },
+    {
+      "source": {
+        "node_id": "anima_model_loader:0t38CQGoGZ",
+        "field": "qwen3_encoder"
+      },
+      "destination": {
+        "node_id": "pos_prompt:eRls7mTNui",
+        "field": "qwen3_encoder"
+      }
+    },
+    {
+      "source": {
+        "node_id": "anima_model_loader:0t38CQGoGZ",
+        "field": "vae"
+      },
+      "destination": {
+        "node_id": "canvas_output:EGsk8V32wo",
+        "field": "vae"
+      }
+    },
+    {
+      "source": {
+        "node_id": "positive_prompt:yviCKA4N4f",
+        "field": "value"
+      },
+      "destination": {
+        "node_id": "pos_prompt:eRls7mTNui",
+        "field": "prompt"
+      }
+    },
+    {
+      "source": {
+        "node_id": "pos_prompt:eRls7mTNui",
+        "field": "conditioning"
+      },
+      "destination": {
+        "node_id": "pos_cond_collect:G1X6AubCps",
+        "field": "item"
+      }
+    },
+    {
+      "source": {
+        "node_id": "pos_cond_collect:G1X6AubCps",
+        "field": "collection"
+      },
+      "destination": {
+        "node_id": "denoise_latents:rrOFNjdI8q",
+        "field": "positive_conditioning"
+      }
+    },
+    {
+      "source": {
+        "node_id": "anima_model_loader:0t38CQGoGZ",
+        "field": "qwen3_encoder"
+      },
+      "destination": {
+        "node_id": "neg_prompt:AaboGyFqJb",
+        "field": "qwen3_encoder"
+      }
+    },
+    {
+      "source": {
+        "node_id": "neg_prompt:AaboGyFqJb",
+        "field": "conditioning"
+      },
+      "destination": {
+        "node_id": "neg_cond_collect:2RlSkBXe94",
+        "field": "item"
+      }
+    },
+    {
+      "source": {
+        "node_id": "neg_cond_collect:2RlSkBXe94",
+        "field": "collection"
+      },
+      "destination": {
+        "node_id": "denoise_latents:rrOFNjdI8q",
+        "field": "negative_conditioning"
+      }
+    },
+    {
+      "source": {
+        "node_id": "seed:mWc1NcOCKy",
+        "field": "value"
+      },
+      "destination": {
+        "node_id": "denoise_latents:rrOFNjdI8q",
+        "field": "seed"
+      }
+    },
+    {
+      "source": {
+        "node_id": "denoise_latents:rrOFNjdI8q",
+        "field": "latents"
+      },
+      "destination": {
+        "node_id": "canvas_output:EGsk8V32wo",
+        "field": "latents"
+      }
+    },
+    {
+      "source": {
+        "node_id": "seed:mWc1NcOCKy",
+        "field": "value"
+      },
+      "destination": {
+        "node_id": "core_metadata:rbG63QczEn",
+        "field": "seed"
+      }
+    },
+    {
+      "source": {
+        "node_id": "positive_prompt:yviCKA4N4f",
+        "field": "value"
+      },
+      "destination": {
+        "node_id": "core_metadata:rbG63QczEn",
+        "field": "positive_prompt"
+      }
+    },
+    {
+      "source": {
+        "node_id": "core_metadata:rbG63QczEn",
+        "field": "metadata"
+      },
+      "destination": {
+        "node_id": "canvas_output:EGsk8V32wo",
+        "field": "metadata"
+      }
+    }
+  ]
+}

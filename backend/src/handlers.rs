@@ -70,6 +70,8 @@ pub async fn handle_pin_required(
         "attempts_left": attempts_left,
         "lockout_minutes": lockout_minutes,
         "enable_translation": state.auth.enable_translation,
+        "enable_themes": state.config.enable_themes,
+        "enable_print": state.config.enable_print,
     }))
 }
 

@@ -7,6 +7,8 @@ pub struct Config {
     pub pin: Option<String>,
     pub max_attempts: usize,
     pub enable_translation: bool,
+    pub enable_themes: bool,
+    pub enable_print: bool,
     pub searxng_base_url: String,
     pub search_provider: String,
     pub ollama_base_url: String,
@@ -40,6 +42,14 @@ impl Config {
             .map(|v| v == "true" || v == "on")
             .unwrap_or(true);
 
+        let enable_themes = env::var("ENABLE_THEMES")
+            .map(|v| v != "false" && v != "off")
+            .unwrap_or(true);
+
+        let enable_print = env::var("ENABLE_PRINT")
+            .map(|v| v != "false" && v != "off")
+            .unwrap_or(true);
+
         let searxng_base_url =
             env::var("SEARXNG_BASE_URL").unwrap_or_else(|_| "http://127.0.0.1:8888".to_string());
 
@@ -60,6 +70,8 @@ impl Config {
             pin,
             max_attempts,
             enable_translation,
+            enable_themes,
+            enable_print,
             searxng_base_url,
             search_provider,
             ollama_base_url,

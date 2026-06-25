@@ -1,0 +1,545 @@
+{
+  "id": "sdxl_graph:Q43gVPGfwX",
+  "nodes": {
+    "sdxl_model_loader:8bEWfgXvmL": {
+      "id": "sdxl_model_loader:8bEWfgXvmL",
+      "is_intermediate": true,
+      "use_cache": true,
+      "model": {
+        "key": "93a406dc-1fce-4cbd-bb67-c82d6dd9d651",
+        "hash": "blake3:473a76d0adb6d3a1f63398f1dbe6b902cc6e09ee635c0655d1976a4bf6b6ad39",
+        "name": "Architecture (RealVisXL5)",
+        "base": "sdxl",
+        "type": "main",
+        "submodel_type": null
+      },
+      "type": "sdxl_model_loader"
+    },
+    "positive_prompt:7t9fKyeVRN": {
+      "id": "positive_prompt:7t9fKyeVRN",
+      "is_intermediate": true,
+      "use_cache": true,
+      "value": "cleavage, flat chest anime++, bold outline, cel-shaded coloring, shounen, seinen",
+      "type": "string"
+    },
+    "negative_prompt:i8lA5KzBKq": {
+      "id": "negative_prompt:i8lA5KzBKq",
+      "is_intermediate": true,
+      "use_cache": true,
+      "value": "Asian, sad, mad, (long hair), child, (photo)+++. greyscale. solid black. painting",
+      "type": "string"
+    },
+    "pos_cond:kMZS4iZRjC": {
+      "id": "pos_cond:kMZS4iZRjC",
+      "is_intermediate": true,
+      "use_cache": true,
+      "prompt": "",
+      "style": "",
+      "original_width": 1024,
+      "original_height": 1024,
+      "crop_top": 0,
+      "crop_left": 0,
+      "target_width": 1024,
+      "target_height": 1024,
+      "clip": null,
+      "clip2": null,
+      "mask": null,
+      "type": "sdxl_compel_prompt"
+    },
+    "pos_cond_collect:ep7ZJ7stmc": {
+      "id": "pos_cond_collect:ep7ZJ7stmc",
+      "is_intermediate": true,
+      "use_cache": true,
+      "item": null,
+      "collection": [],
+      "type": "collect"
+    },
+    "neg_cond:oTzbLQnOEs": {
+      "id": "neg_cond:oTzbLQnOEs",
+      "is_intermediate": true,
+      "use_cache": true,
+      "prompt": "",
+      "style": "",
+      "original_width": 1024,
+      "original_height": 1024,
+      "crop_top": 0,
+      "crop_left": 0,
+      "target_width": 1024,
+      "target_height": 1024,
+      "clip": null,
+      "clip2": null,
+      "mask": null,
+      "type": "sdxl_compel_prompt"
+    },
+    "neg_cond_collect:WpTyfSfqqt": {
+      "id": "neg_cond_collect:WpTyfSfqqt",
+      "is_intermediate": true,
+      "use_cache": true,
+      "item": null,
+      "collection": [],
+      "type": "collect"
+    },
+    "seed:y2G1w8xxc8": {
+      "id": "seed:y2G1w8xxc8",
+      "is_intermediate": true,
+      "use_cache": true,
+      "value": 458731942,
+      "type": "integer"
+    },
+    "noise:AWB8sKiTmO": {
+      "id": "noise:AWB8sKiTmO",
+      "is_intermediate": true,
+      "use_cache": true,
+      "noise_type": "SD",
+      "seed": 0,
+      "width": 1024,
+      "height": 1024,
+      "use_cpu": true,
+      "type": "noise"
+    },
+    "denoise_latents:Ktk71K9GJg": {
+      "id": "denoise_latents:Ktk71K9GJg",
+      "is_intermediate": true,
+      "use_cache": true,
+      "positive_conditioning": null,
+      "negative_conditioning": null,
+      "noise": null,
+      "steps": 35,
+      "cfg_scale": 4.5,
+      "denoising_start": 0.0,
+      "denoising_end": 1.0,
+      "scheduler": "euler_a",
+      "unet": null,
+      "control": null,
+      "ip_adapter": null,
+      "t2i_adapter": null,
+      "cfg_rescale_multiplier": 0.0,
+      "latents": null,
+      "denoise_mask": null,
+      "type": "denoise_latents"
+    },
+    "vae:s1gvsKC8Yj": {
+      "id": "vae:s1gvsKC8Yj",
+      "is_intermediate": true,
+      "use_cache": true,
+      "vae_model": {
+        "key": "c6628fb7-fd8e-4392-8686-ec16a8c27b0c",
+        "hash": "blake3:9705ab1c31fa96b308734214fb7571a958621c7a9247eed82b7d277145f8d9fa",
+        "name": "sdxl-vae-fp16-fix",
+        "base": "sdxl",
+        "type": "vae",
+        "submodel_type": null
+      },
+      "type": "vae_loader"
+    },
+    "core_metadata:zYoQtKl53M": {
+      "id": "core_metadata:zYoQtKl53M",
+      "is_intermediate": true,
+      "use_cache": true,
+      "generation_mode": "sdxl_txt2img",
+      "positive_prompt": null,
+      "negative_prompt": null,
+      "width": 1024,
+      "height": 1024,
+      "seed": null,
+      "rand_device": "cpu",
+      "cfg_scale": 4.5,
+      "cfg_rescale_multiplier": 0.0,
+      "steps": 35,
+      "scheduler": "euler_a",
+      "seamless_x": false,
+      "seamless_y": false,
+      "clip_skip": null,
+      "model": {
+        "key": "93a406dc-1fce-4cbd-bb67-c82d6dd9d651",
+        "hash": "blake3:473a76d0adb6d3a1f63398f1dbe6b902cc6e09ee635c0655d1976a4bf6b6ad39",
+        "name": "Architecture (RealVisXL5)",
+        "base": "sdxl",
+        "type": "main",
+        "submodel_type": null
+      },
+      "controlnets": null,
+      "ipAdapters": null,
+      "t2iAdapters": null,
+      "loras": null,
+      "strength": null,
+      "init_image": null,
+      "vae": {
+        "key": "c6628fb7-fd8e-4392-8686-ec16a8c27b0c",
+        "hash": "blake3:9705ab1c31fa96b308734214fb7571a958621c7a9247eed82b7d277145f8d9fa",
+        "name": "sdxl-vae-fp16-fix",
+        "base": "sdxl",
+        "type": "vae",
+        "submodel_type": null
+      },
+      "qwen3_encoder": null,
+      "hrf_enabled": null,
+      "hrf_method": null,
+      "hrf_strength": null,
+      "positive_style_prompt": null,
+      "negative_style_prompt": null,
+      "refiner_model": {
+        "key": "9e02501b-66f5-4340-ae90-b93b61e88dca",
+        "hash": "blake3:c1030085a6abc969f026ab7ea3ca9e3510f11c7aa2be1999eb529e2283c5b0e1",
+        "name": "SDXL Refiner",
+        "base": "sdxl-refiner",
+        "type": "main",
+        "submodel_type": null
+      },
+      "refiner_cfg_scale": 7.5,
+      "refiner_steps": 20,
+      "refiner_scheduler": "euler_a",
+      "refiner_positive_aesthetic_score": 6.0,
+      "refiner_negative_aesthetic_score": 2.5,
+      "refiner_start": 0.8,
+      "type": "core_metadata",
+      "ref_images": []
+    },
+    "refiner_model_loader:hJGzc0c9FM": {
+      "id": "refiner_model_loader:hJGzc0c9FM",
+      "is_intermediate": true,
+      "use_cache": true,
+      "model": {
+        "key": "9e02501b-66f5-4340-ae90-b93b61e88dca",
+        "hash": "blake3:c1030085a6abc969f026ab7ea3ca9e3510f11c7aa2be1999eb529e2283c5b0e1",
+        "name": "SDXL Refiner",
+        "base": "sdxl-refiner",
+        "type": "main",
+        "submodel_type": null
+      },
+      "type": "sdxl_refiner_model_loader"
+    },
+    "refiner_pos_cond:t88dXA8Jr5": {
+      "id": "refiner_pos_cond:t88dXA8Jr5",
+      "is_intermediate": true,
+      "use_cache": true,
+      "style": "",
+      "original_width": 1024,
+      "original_height": 1024,
+      "crop_top": 0,
+      "crop_left": 0,
+      "aesthetic_score": 6.0,
+      "clip2": null,
+      "type": "sdxl_refiner_compel_prompt"
+    },
+    "refiner_neg_cond:1ihyXYu9UL": {
+      "id": "refiner_neg_cond:1ihyXYu9UL",
+      "is_intermediate": true,
+      "use_cache": true,
+      "style": "",
+      "original_width": 1024,
+      "original_height": 1024,
+      "crop_top": 0,
+      "crop_left": 0,
+      "aesthetic_score": 2.5,
+      "clip2": null,
+      "type": "sdxl_refiner_compel_prompt"
+    },
+    "refiner_denoise_latents:F6INetvClP": {
+      "id": "refiner_denoise_latents:F6INetvClP",
+      "is_intermediate": true,
+      "use_cache": true,
+      "positive_conditioning": null,
+      "negative_conditioning": null,
+      "noise": null,
+      "steps": 20,
+      "cfg_scale": 7.5,
+      "denoising_start": 0.8,
+      "denoising_end": 1.0,
+      "scheduler": "euler_a",
+      "unet": null,
+      "control": null,
+      "ip_adapter": null,
+      "t2i_adapter": null,
+      "cfg_rescale_multiplier": 0.0,
+      "latents": null,
+      "denoise_mask": null,
+      "type": "denoise_latents"
+    },
+    "canvas_output:iRI3puNruQ": {
+      "board": null,
+      "metadata": null,
+      "id": "canvas_output:iRI3puNruQ",
+      "is_intermediate": false,
+      "use_cache": false,
+      "latents": null,
+      "vae": null,
+      "tiled": false,
+      "tile_size": 0,
+      "fp32": false,
+      "type": "l2i"
+    }
+  },
+  "edges": [
+    {
+      "source": {
+        "node_id": "sdxl_model_loader:8bEWfgXvmL",
+        "field": "unet"
+      },
+      "destination": {
+        "node_id": "denoise_latents:Ktk71K9GJg",
+        "field": "unet"
+      }
+    },
+    {
+      "source": {
+        "node_id": "sdxl_model_loader:8bEWfgXvmL",
+        "field": "clip"
+      },
+      "destination": {
+        "node_id": "pos_cond:kMZS4iZRjC",
+        "field": "clip"
+      }
+    },
+    {
+      "source": {
+        "node_id": "sdxl_model_loader:8bEWfgXvmL",
+        "field": "clip"
+      },
+      "destination": {
+        "node_id": "neg_cond:oTzbLQnOEs",
+        "field": "clip"
+      }
+    },
+    {
+      "source": {
+        "node_id": "sdxl_model_loader:8bEWfgXvmL",
+        "field": "clip2"
+      },
+      "destination": {
+        "node_id": "pos_cond:kMZS4iZRjC",
+        "field": "clip2"
+      }
+    },
+    {
+      "source": {
+        "node_id": "sdxl_model_loader:8bEWfgXvmL",
+        "field": "clip2"
+      },
+      "destination": {
+        "node_id": "neg_cond:oTzbLQnOEs",
+        "field": "clip2"
+      }
+    },
+    {
+      "source": {
+        "node_id": "positive_prompt:7t9fKyeVRN",
+        "field": "value"
+      },
+      "destination": {
+        "node_id": "pos_cond:kMZS4iZRjC",
+        "field": "prompt"
+      }
+    },
+    {
+      "source": {
+        "node_id": "positive_prompt:7t9fKyeVRN",
+        "field": "value"
+      },
+      "destination": {
+        "node_id": "pos_cond:kMZS4iZRjC",
+        "field": "style"
+      }
+    },
+    {
+      "source": {
+        "node_id": "negative_prompt:i8lA5KzBKq",
+        "field": "value"
+      },
+      "destination": {
+        "node_id": "neg_cond:oTzbLQnOEs",
+        "field": "prompt"
+      }
+    },
+    {
+      "source": {
+        "node_id": "negative_prompt:i8lA5KzBKq",
+        "field": "value"
+      },
+      "destination": {
+        "node_id": "neg_cond:oTzbLQnOEs",
+        "field": "style"
+      }
+    },
+    {
+      "source": {
+        "node_id": "pos_cond:kMZS4iZRjC",
+        "field": "conditioning"
+      },
+      "destination": {
+        "node_id": "pos_cond_collect:ep7ZJ7stmc",
+        "field": "item"
+      }
+    },
+    {
+      "source": {
+        "node_id": "pos_cond_collect:ep7ZJ7stmc",
+        "field": "collection"
+      },
+      "destination": {
+        "node_id": "denoise_latents:Ktk71K9GJg",
+        "field": "positive_conditioning"
+      }
+    },
+    {
+      "source": {
+        "node_id": "neg_cond:oTzbLQnOEs",
+        "field": "conditioning"
+      },
+      "destination": {
+        "node_id": "neg_cond_collect:WpTyfSfqqt",
+        "field": "item"
+      }
+    },
+    {
+      "source": {
+        "node_id": "neg_cond_collect:WpTyfSfqqt",
+        "field": "collection"
+      },
+      "destination": {
+        "node_id": "denoise_latents:Ktk71K9GJg",
+        "field": "negative_conditioning"
+      }
+    },
+    {
+      "source": {
+        "node_id": "seed:y2G1w8xxc8",
+        "field": "value"
+      },
+      "destination": {
+        "node_id": "noise:AWB8sKiTmO",
+        "field": "seed"
+      }
+    },
+    {
+      "source": {
+        "node_id": "noise:AWB8sKiTmO",
+        "field": "noise"
+      },
+      "destination": {
+        "node_id": "denoise_latents:Ktk71K9GJg",
+        "field": "noise"
+      }
+    },
+    {
+      "source": {
+        "node_id": "seed:y2G1w8xxc8",
+        "field": "value"
+      },
+      "destination": {
+        "node_id": "core_metadata:zYoQtKl53M",
+        "field": "seed"
+      }
+    },
+    {
+      "source": {
+        "node_id": "positive_prompt:7t9fKyeVRN",
+        "field": "value"
+      },
+      "destination": {
+        "node_id": "core_metadata:zYoQtKl53M",
+        "field": "positive_prompt"
+      }
+    },
+    {
+      "source": {
+        "node_id": "negative_prompt:i8lA5KzBKq",
+        "field": "value"
+      },
+      "destination": {
+        "node_id": "core_metadata:zYoQtKl53M",
+        "field": "negative_prompt"
+      }
+    },
+    {
+      "source": {
+        "node_id": "vae:s1gvsKC8Yj",
+        "field": "vae"
+      },
+      "destination": {
+        "node_id": "canvas_output:iRI3puNruQ",
+        "field": "vae"
+      }
+    },
+    {
+      "source": {
+        "node_id": "refiner_model_loader:hJGzc0c9FM",
+        "field": "unet"
+      },
+      "destination": {
+        "node_id": "refiner_denoise_latents:F6INetvClP",
+        "field": "unet"
+      }
+    },
+    {
+      "source": {
+        "node_id": "refiner_model_loader:hJGzc0c9FM",
+        "field": "clip2"
+      },
+      "destination": {
+        "node_id": "refiner_pos_cond:t88dXA8Jr5",
+        "field": "clip2"
+      }
+    },
+    {
+      "source": {
+        "node_id": "refiner_model_loader:hJGzc0c9FM",
+        "field": "clip2"
+      },
+      "destination": {
+        "node_id": "refiner_neg_cond:1ihyXYu9UL",
+        "field": "clip2"
+      }
+    },
+    {
+      "source": {
+        "node_id": "refiner_pos_cond:t88dXA8Jr5",
+        "field": "conditioning"
+      },
+      "destination": {
+        "node_id": "refiner_denoise_latents:F6INetvClP",
+        "field": "positive_conditioning"
+      }
+    },
+    {
+      "source": {
+        "node_id": "refiner_neg_cond:1ihyXYu9UL",
+        "field": "conditioning"
+      },
+      "destination": {
+        "node_id": "refiner_denoise_latents:F6INetvClP",
+        "field": "negative_conditioning"
+      }
+    },
+    {
+      "source": {
+        "node_id": "denoise_latents:Ktk71K9GJg",
+        "field": "latents"
+      },
+      "destination": {
+        "node_id": "refiner_denoise_latents:F6INetvClP",
+        "field": "latents"
+      }
+    },
+    {
+      "source": {
+        "node_id": "refiner_denoise_latents:F6INetvClP",
+        "field": "latents"
+      },
+      "destination": {
+        "node_id": "canvas_output:iRI3puNruQ",
+        "field": "latents"
+      }
+    },
+    {
+      "source": {
+        "node_id": "core_metadata:zYoQtKl53M",
+        "field": "metadata"
+      },
+      "destination": {
+        "node_id": "canvas_output:iRI3puNruQ",
+        "field": "metadata"
+      }
+    }
+  ]
+}
