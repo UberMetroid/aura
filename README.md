@@ -32,12 +32,17 @@ services:
     restart: unless-stopped
     ports:
       - 4408:4408
+    volumes:
+      - ./data:/app/data
     environment:
       - PORT=4408
-      - AURA_PIN=1234
       - SITE_TITLE=Aura
+      - ALLOWED_ORIGINS=*
+      - AURA_PIN=1234
+      - TZ=UTC
       - OLLAMA_BASE_URL=http://localhost:11434
       - OLLAMA_MODEL=llama3
+      - ENABLE_TRANSLATION=true
 ```
 
 2. Run the container:
