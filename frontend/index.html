@@ -5,17 +5,7 @@
     <title>RustSearch</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <script>
-        // Prevent theme flicker by setting theme immediately
-        (() => {
-            let theme = localStorage.getItem('theme') || 'crateria';
-            if (theme.startsWith('"') && theme.endsWith('"')) {
-                theme = theme.slice(1, -1);
-            }
-            document.documentElement.className = theme;
-            document.documentElement.setAttribute('data-theme', theme);
-        })();
-    </script>
+
 
     <!-- data-trunk tells Trunk to compile and bundle style.css -->
     <link data-trunk rel="css" href="style.css" />

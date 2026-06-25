@@ -32,11 +32,8 @@ pub fn App() -> impl IntoView {
     let (error_message, set_error_message) = create_signal(String::new());
 
     let (enable_translation, set_enable_translation) = create_signal(true);
-
-    // Theme state
     let (theme, _set_theme, on_toggle_theme) = theme::use_theme();
 
-    // Locale state
     let (locale, set_locale) = create_signal({
         let storage = web_sys::window().and_then(|win| win.local_storage().ok().flatten());
         let lang = storage
@@ -45,10 +42,8 @@ pub fn App() -> impl IntoView {
         Locale::from_str(&lang)
     });
 
-    // Footer notification state
     let (footer_notification, set_footer_notification) = create_signal(None::<(String, String)>);
 
-    // Save language setting when it changes
     create_effect(move |_| {
         if let Some(storage) = web_sys::window().and_then(|win| win.local_storage().ok().flatten())
         {
@@ -56,38 +51,27 @@ pub fn App() -> impl IntoView {
         }
     });
 
-    // Show toast function
-    let show_toast = move |message: String, is_error: bool| {
-        let cls = if is_error {
-            "error".to_string()
-        } else {
-            "success".to_string()
-        };
-        set_footer_notification.set(Some((message, cls)));
-        gloo_timers::callback::Timeout::new(3000, move || {
-            set_footer_notification.set(None);
-        })
-        .forget();
+    let show_toast = move |msg: String, is_err: bool| {
+        let cls = if is_err { "error" } else { "success" }.to_string();
+        set_footer_notification.set(Some((msg, cls)));
+        gloo_timers::callback::Timeout::new(3000, move || set_footer_notification.set(None))
+            .forget();
     };
 
-    // Check auth status on startup
     create_effect(move |_| {
         spawn_local(async move {
-            match api::check_auth_status().await {
-                Ok(status) => {
-                    set_access_key_required.set(status.pin_required);
-                    set_is_authorized.set(status.is_authorized);
-                    set_enable_translation.set(status.enable_translation);
-                }
-                Err(_) => {
-                    set_error_message.set(translate(TransKey::ConnectionError, locale.get()));
-                    show_toast(translate(TransKey::ConnectionError, locale.get()), true);
-                }
+            if let Ok(st) = api::check_auth_status().await {
+                set_access_key_required.set(st.pin_required);
+                set_is_authorized.set(st.is_authorized);
+                set_enable_translation.set(st.enable_translation);
+            } else {
+                let err = translate(TransKey::ConnectionError, locale.get());
+                set_error_message.set(err.clone());
+                show_toast(err, true);
             }
-        });
+        })
     });
 
-    // Handle PIN validation submit
     let on_submit_password = move |ev: ev::SubmitEvent| {
         ev.prevent_default();
         let password = access_key_input.get();
@@ -97,29 +81,25 @@ pub fn App() -> impl IntoView {
         spawn_local(async move {
             set_is_loading.set(true);
             set_error_message.set(String::new());
-            match api::verify_pin(&password).await {
-                Ok(true) => {
-                    set_is_authorized.set(true);
-                    show_toast(
-                        translate(TransKey::AuthenticatedSuccess, locale.get()),
-                        false,
-                    );
-                }
-                Ok(false) => {
-                    let err_msg = translate(TransKey::InvalidPassword, locale.get());
-                    set_error_message.set(err_msg.clone());
-                    show_toast(err_msg, true);
-                }
-                Err(err_msg) => {
-                    set_error_message.set(err_msg.clone());
-                    show_toast(err_msg, true);
-                }
+            let res = match api::verify_pin(&password).await {
+                Ok(true) => Ok(()),
+                Ok(false) => Err(translate(TransKey::InvalidPassword, locale.get())),
+                Err(err) => Err(err),
+            };
+            if let Err(err) = &res {
+                set_error_message.set(err.clone());
+                show_toast(err.clone(), true);
+            } else {
+                set_is_authorized.set(true);
+                show_toast(
+                    translate(TransKey::AuthenticatedSuccess, locale.get()),
+                    false,
+                );
             }
             set_is_loading.set(false);
         });
     };
 
-    // Run the search and start text streaming
     let on_search = move |ev: ev::SubmitEvent| {
         ev.prevent_default();
         let query = query_input.get();
@@ -141,13 +121,28 @@ pub fn App() -> impl IntoView {
                         set_is_loading.set(false);
                         if !mapped.is_empty() {
                             set_is_generating.set(true);
-                            let mut context = String::from("You are a direct, concise AI assistant. Answer the user's query briefly using ONLY the search results below.\n\n\
+                            let wiki_grok_results: Vec<&TextSearchResult> = mapped
+                                .iter()
+                                .filter(|res| {
+                                    res.url.contains("wikipedia.org")
+                                        || res.url.contains("grokipedia.com")
+                                })
+                                .collect();
+
+                            let results_to_feed = if !wiki_grok_results.is_empty() {
+                                wiki_grok_results
+                            } else {
+                                mapped.iter().collect::<Vec<_>>()
+                            };
+
+                            let mut context = String::from("You are a direct, concise AI assistant. Answer the user's query briefly by providing an overview using ONLY the search results below.\n\n\
                             Rules:\n\
                             1. Do not use conversational filler, greetings, pleasantries, or introductory preamble.\n\
                             2. Keep the answer extremely brief and to the point.\n\
-                            3. CRITICAL: Do not ask the user any follow-up questions, suggest next steps, or prompt for more input. Stop speaking immediately after answering the query.\n\n\
+                            3. CRITICAL: Do not ask the user any follow-up questions, suggest next steps, or prompt for more input. Stop speaking immediately after answering the query.\n\
+                            4. Do NOT prepend your response with 'AI Assistant:', 'AI:', 'Overview:', or any other speaker label prefix.\n\n\
                             Search results:\n\n");
-                            for (i, res) in mapped.iter().enumerate() {
+                            for (i, res) in results_to_feed.into_iter().enumerate() {
                                 context.push_str(&format!(
                                     "{}. [{}]({}): {}\n",
                                     i + 1,
@@ -156,6 +151,7 @@ pub fn App() -> impl IntoView {
                                     res.snippet
                                 ));
                             }
+
                             let chat_req = ChatCompletionRequest {
                                 messages: vec![
                                     ChatMessage {
@@ -169,8 +165,34 @@ pub fn App() -> impl IntoView {
                                 ],
                             };
                             if let Err(e) = api::stream_inference(&chat_req, move |content| {
-                                let current = ai_response.get();
-                                set_ai_response.set(format!("{}{}", current, content));
+                                let mut current = ai_response.get();
+                                current.push_str(&content);
+
+                                let mut stripped = current.as_str();
+                                loop {
+                                    let mut changed = false;
+                                    for prefix in &[
+                                        "AI Assistant:",
+                                        "AI assistant:",
+                                        "ai assistant:",
+                                        "AI:",
+                                        "ai:",
+                                        "Overview:",
+                                        "overview:",
+                                        "Answer:",
+                                        "answer:",
+                                    ] {
+                                        if stripped.starts_with(prefix) {
+                                            stripped =
+                                                stripped.strip_prefix(prefix).unwrap().trim_start();
+                                            changed = true;
+                                        }
+                                    }
+                                    if !changed {
+                                        break;
+                                    }
+                                }
+                                set_ai_response.set(stripped.to_string());
                             })
                             .await
                             {

@@ -26,8 +26,8 @@ where
             // AI Response Section
             {move || has_ai().then(|| view! {
                 <section class="ai-response-section">
-                    <h3>{move || translate(TransKey::AIAssistantTitle, locale.get())}</h3>
                     <div class="ai-response-card">
+
                         <div class="ai-text">
                             {move || if ai_response.get().is_empty() && is_generating.get() {
                                 view! { <span class="ai-thinking">{translate(TransKey::ThinkingMsg, locale.get())}</span> }.into_view()

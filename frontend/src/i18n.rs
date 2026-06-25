@@ -74,6 +74,7 @@ impl Locale {
 }
 
 #[derive(Clone, Copy, PartialEq, Debug)]
+#[allow(dead_code)]
 pub enum TransKey {
     EnterPin,
     PinDescription,

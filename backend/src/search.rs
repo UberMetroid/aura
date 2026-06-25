@@ -63,9 +63,6 @@ impl SearchService {
         query: &str,
         limit: usize,
     ) -> Result<Vec<(String, String, String, String)>, String> {
-        if self.search_provider != "searxng" {
-            return Ok(Vec::new());
-        }
         crate::searxng::search_images_searxng(
             &self.searxng_base_url,
             &self.circuit_breaker,
