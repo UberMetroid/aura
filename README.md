@@ -6,7 +6,7 @@ Aura is a blazing fast, privacy-focused search engine with an integrated AI assi
 
 ## 🐳 Container Installation
 
-### Option 1: Docker Compose (Recommended)
+
 
 1. Create a `docker-compose.yml` file:
 
@@ -35,20 +35,6 @@ docker compose up -d
 
 3. Open your browser and navigate to `http://localhost:4408`.
 
-### Option 2: Docker CLI
-
-Run the following command to start the container:
-
-```bash
-docker run -d \
-  --name aura \
-  --restart unless-stopped \
-  -p 4408:4408 \
-  -e AURA_PIN=1234 \
-  -e OLLAMA_BASE_URL=http://192.168.1.50:11434 \
-  -e OLLAMA_MODEL=llama3 \
-  ubermetroid/aura:latest
-```
 
 ---
 
@@ -71,49 +57,4 @@ Configure these settings inside your Docker Compose environment or container env
 
 ---
 
-## 📂 Repository Structure
-
-```
-.
-├── backend/
-│   ├── Cargo.toml
-│   └── src
-│       ├── auth.rs
-│       ├── circuit_breaker.rs
-│       ├── config.rs
-│       ├── handlers.rs
-│       ├── inference.rs
-│       ├── main.rs
-│       ├── search.rs
-│       ├── status.rs
-│       └── utils.rs
-└── frontend/
-    ├── Cargo.toml
-    ├── favicon.svg
-    ├── index.html
-    ├── style.css
-    └── src
-        ├── api.rs
-        ├── header.rs
-        ├── i18n
-        │   ├── de.rs
-        │   ├── en.rs
-        │   ├── es.rs
-        │   ├── fr.rs
-        │   ├── ja.rs
-        │   ├── pt.rs
-        │   ├── ru.rs
-        │   └── zh.rs
-        ├── i18n.rs
-        ├── lib.rs
-        ├── login.rs
-        ├── main.rs
-        ├── theme.rs
-        ├── search_panel.rs
-        └── types.rs
-```
-
-
----
-
-*Note: This repository was forked from [RustSearch](https://github.com/UberMetroid/RustSearch).*
+*Note: This repository was forked from [MiniSearch](https://github.com/felladrin/MiniSearch).*
