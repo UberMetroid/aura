@@ -1,4 +1,8 @@
-# Aura - Privacy-focused AI Search Engine
+# Aura - AI Search Assistant
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/UberMetroid/aura/main/frontend/favicon.png" alt="Aura Logo" width="128" height="128">
+</p>
 
 Aura is a blazing fast, privacy-focused search engine with an integrated AI assistant. It compiles to 100% native Rust using Axum on the backend and Leptos (WebAssembly) on the frontend. It proxies queries through SearXNG to protect privacy, and processes AI queries using a user-configured self-hosted Ollama server.
 
