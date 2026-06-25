@@ -1,31 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
 <g>
-    <!-- Background Circle (Opacity 0.08) -->
-    <circle cx="256" cy="256" r="232" style="opacity:0.08;fill:#e05d44;"/>
-    
-    <!-- Outer Gear/Cog (Rust-style) -->
-    <path style="fill:#e05d44;" d="M256,128c-70.7,0-128,57.3-128,128s57.3,128,128,128s128-57.3,128-128S326.7,128,256,128z M256,344c-48.6,0-88-39.4-88-88s39.4-88,88-88s88,39.4,88,88S304.6,344,256,344z"/>
-    
-    <!-- Gear Teeth (8 teeth around the gear) -->
-    <rect x="236" y="80" width="40" height="48" rx="8" style="fill:#e05d44;"/>
-    <rect x="236" y="384" width="40" height="48" rx="8" style="fill:#e05d44;"/>
-    <rect x="80" y="236" width="48" height="40" rx="8" style="fill:#e05d44;"/>
-    <rect x="384" y="236" width="48" height="40" rx="8" style="fill:#e05d44;"/>
-    
-    <g transform="rotate(45, 256, 256)">
-        <rect x="236" y="80" width="40" height="48" rx="8" style="fill:#e05d44;"/>
-        <rect x="236" y="384" width="40" height="48" rx="8" style="fill:#e05d44;"/>
-        <rect x="80" y="236" width="48" height="40" rx="8" style="fill:#e05d44;"/>
-        <rect x="384" y="236" width="48" height="40" rx="8" style="fill:#e05d44;"/>
-    </g>
-
-    <!-- Center: Search Crosshair / Radar Target -->
-    <circle cx="256" cy="256" r="48" style="fill:none;stroke:#e05d44;stroke-width:12;"/>
-    <line x1="256" y1="208" x2="256" y2="304" style="stroke:#e05d44;stroke-width:12;stroke-linecap:round;"/>
-    <line x1="208" y1="256" x2="304" y2="256" style="stroke:#e05d44;stroke-width:12;stroke-linecap:round;"/>
-    
-    <!-- Sweeping Radar Sonar Scan Beam -->
-    <path d="M256,180 A76,76 0 0,1 332,256" style="fill:none;stroke:#e05d44;stroke-width:16;stroke-linecap:round;opacity:0.8;"/>
+	<circle cx="256" cy="256" r="232.7" style="opacity:0.2;fill:#e05d44;enable-background:new;"/>
+	<path style="fill:#e05d44;" d="M256,512C114.8,512,0,397.2,0,256S114.8,0,256,0s256,114.8,256,256S397.2,512,256,512z M256,46.6
+		c-115.5,0-209.5,94-209.5,209.5s94,209.5,209.5,209.5s209.5-94,209.5-209.5C465.5,140.5,371.5,46.6,256,46.6z"/>
+	<!-- Magnifying Glass Lens -->
+	<circle cx="230" cy="230" r="65" style="fill:none;stroke:#e05d44;stroke-width:32;stroke-linecap:round;stroke-linejoin:round;opacity:0.9;"/>
+	<!-- Magnifying Glass Handle -->
+	<line x1="276" y1="276" x2="370" y2="370" style="fill:none;stroke:#e05d44;stroke-width:32;stroke-linecap:round;stroke-linejoin:round;opacity:0.9;"/>
 </g>
 </svg>
