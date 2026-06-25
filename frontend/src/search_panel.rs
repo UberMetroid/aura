@@ -23,6 +23,24 @@ where
 
     view! {
         <main class="main-content">
+            // AI Response Section
+            {move || has_ai().then(|| view! {
+                <section class="ai-response-section">
+                    <h3>{move || translate(TransKey::AIAssistantTitle, locale.get())}</h3>
+                    <div class="ai-response-card">
+                        <div class="ai-text">
+                            {move || if ai_response.get().is_empty() && is_generating.get() {
+                                view! { <span class="ai-thinking">{translate(TransKey::ThinkingMsg, locale.get())}</span> }.into_view()
+                             } else {
+                                view! { {ai_response.get()} }.into_view()
+                             }}
+                            {move || is_generating.get().then(|| view! { <span class="cursor-blink">"▌"</span> })}
+                        </div>
+                    </div>
+                </section>
+            })}
+
+            // Search Box
             <div class="search-section">
                 <form class="search-form" on:submit=on_search>
                     <div class="search-input-group">
@@ -63,62 +81,38 @@ where
                 </form>
             </div>
 
-            <div class=move || if has_ai() { "results-layout" } else { "results-layout no-ai" }>
-                // Left Column: Search Results
-                <div class="results-left-column">
-                    // Web Text Search Results
-                    {move || (!text_results.get().is_empty()).then(|| view! {
-                        <section class="search-results-list">
-                            <h3>{move || translate(TransKey::WebResultsTitle, locale.get())}</h3>
-                            <div class="results-grid">
-                                {move || text_results.get().into_iter().map(|res| view! {
-                                    <div class="result-item">
-                                        <a href=res.url.clone() target="_blank" class="result-title">{res.title}</a>
-                                        <div class="result-url">{res.url}</div>
-                                        <p class="result-snippet">{res.snippet}</p>
-                                    </div>
-                                }).collect::<Vec<_>>()}
+            // Web Text Search Results
+            {move || (!text_results.get().is_empty()).then(|| view! {
+                <section class="search-results-list">
+                    <h3>{move || translate(TransKey::WebResultsTitle, locale.get())}</h3>
+                    <div class="results-grid">
+                        {move || text_results.get().into_iter().map(|res| view! {
+                            <div class="result-item">
+                                <a href=res.url.clone() target="_blank" class="result-title">{res.title}</a>
+                                <div class="result-url">{res.url}</div>
+                                <p class="result-snippet">{res.snippet}</p>
                             </div>
-                        </section>
-                    })}
+                        }).collect::<Vec<_>>()}
+                    </div>
+                </section>
+            })}
 
-                    // Image Search Results
-                    {move || (!image_results.get().is_empty()).then(|| view! {
-                        <section class="image-results-list">
-                            <h3>{move || translate(TransKey::ImageResultsTitle, locale.get())}</h3>
-                            <div class="image-grid">
-                                {move || image_results.get().into_iter().map(|res| view! {
-                                    <div class="image-item">
-                                        <a href=res.url target="_blank" title=res.title.clone()>
-                                            <img src=res.thumbnail alt=res.title.clone() class="image-thumbnail" />
-                                        </a>
-                                        <a href=res.source_url target="_blank" class="image-source-link">{move || translate(TransKey::SourceLink, locale.get())}</a>
-                                    </div>
-                                }).collect::<Vec<_>>()}
+            // Image Search Results
+            {move || (!image_results.get().is_empty()).then(|| view! {
+                <section class="image-results-list">
+                    <h3>{move || translate(TransKey::ImageResultsTitle, locale.get())}</h3>
+                    <div class="image-grid">
+                        {move || image_results.get().into_iter().map(|res| view! {
+                            <div class="image-item">
+                                <a href=res.url target="_blank" title=res.title.clone()>
+                                    <img src=res.thumbnail alt=res.title.clone() class="image-thumbnail" />
+                                </a>
+                                <a href=res.source_url target="_blank" class="image-source-link">{move || translate(TransKey::SourceLink, locale.get())}</a>
                             </div>
-                        </section>
-                    })}
-                </div>
-
-                // Right Column: AI Response
-                <div class="results-right-column">
-                    {move || (!ai_response.get().is_empty() || is_generating.get()).then(|| view! {
-                        <section class="ai-response-section">
-                            <h3>{move || translate(TransKey::AIAssistantTitle, locale.get())}</h3>
-                            <div class="ai-response-card">
-                                <div class="ai-text">
-                                    {move || if ai_response.get().is_empty() && is_generating.get() {
-                                        view! { <span class="ai-thinking">{translate(TransKey::ThinkingMsg, locale.get())}</span> }.into_view()
-                                     } else {
-                                        view! { {ai_response.get()} }.into_view()
-                                     }}
-                                    {move || is_generating.get().then(|| view! { <span class="cursor-blink">"▌"</span> })}
-                                </div>
-                            </div>
-                        </section>
-                    })}
-                </div>
-            </div>
+                        }).collect::<Vec<_>>()}
+                    </div>
+                </section>
+            })}
         </main>
     }
 }
