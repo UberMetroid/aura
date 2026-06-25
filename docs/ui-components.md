@@ -2,7 +2,7 @@
 
 ## Architecture Overview
 
-MiniSearch uses a **PubSub-based reactive architecture**. Components subscribe to state changes via channels rather than props drilling or Context API.
+RustSearch uses a **PubSub-based reactive architecture**. Components subscribe to state changes via channels rather than props drilling or Context API.
 
 ### PubSub Pattern
 

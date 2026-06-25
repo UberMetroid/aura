@@ -42,8 +42,8 @@ body:
   - type: dropdown
     id: alignment
     attributes:
-      label: Alignment with MiniSearch's goals
-      description: How does this feature align with MiniSearch's minimalist, privacy-focused philosophy?
+      label: Alignment with RustSearch's goals
+      description: How does this feature align with RustSearch's minimalist, privacy-focused philosophy?
       options:
         - "Strongly aligns - enhances privacy/minimalism"
         - "Moderately aligns - useful but adds complexity"

@@ -1,7 +1,7 @@
-# SearXNG settings for MiniSearch.
+# SearXNG settings for RustSearch.
 #
 # Built on top of SearXNG's upstream defaults via `use_default_settings`, so this
-# file only declares what MiniSearch overrides:
+# file only declares what RustSearch overrides:
 #   - JSON output format (consumed by server/webSearchService.ts)
 #   - an explicit, resilient set of general-web engines
 #

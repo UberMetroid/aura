@@ -1,10 +1,11 @@
-title: MiniSearch
+title: RustSearch
 emoji: 👌🔍
 colorFrom: yellow
 colorTo: yellow
 sdk: docker
 short_description: Minimalist web-searching app with browser-based AI assistant
 pinned: true
+app_port: 4408
 custom_headers:
   cross-origin-embedder-policy: require-corp
   cross-origin-opener-policy: same-origin

@@ -1,9 +1,0 @@
-{
-  "include": ["dependencies"],
-  "ignoreDependencies": [
-    "postcss",
-    "postcss-preset-mantine",
-    "postcss-simple-vars",
-    "globals"
-  ]
-}

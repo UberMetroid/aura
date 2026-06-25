@@ -1,6 +1,6 @@
 # Glossary
 
-Codebase-specific terms, jargon, and domain concepts used in MiniSearch.
+Codebase-specific terms, jargon, and domain concepts used in RustSearch.
 
 ## Core System Concepts
 
@@ -14,7 +14,7 @@ A security mechanism used to authorize communication between the client and the 
 
 ### Inference Types
 
-MiniSearch supports multiple backends for Large Language Model (LLM) inference, configured via `inferenceType` in the application settings.
+RustSearch supports multiple backends for Large Language Model (LLM) inference, configured via `inferenceType` in the application settings.
 
 | Type | Description | Implementation |
 |------|-------------|----------------|
@@ -25,7 +25,7 @@ MiniSearch supports multiple backends for Large Language Model (LLM) inference, 
 
 ### PubSub (State Management)
 
-Instead of a heavy state management library like Redux, MiniSearch uses a minimalist Publish-Subscribe pattern powered by the `create-pubsub` library.
+Instead of a heavy state management library like Redux, RustSearch uses a minimalist Publish-Subscribe pattern powered by the `create-pubsub` library.
 
 - **Data Flow**: Components subscribe to "channels" (e.g., `queryPubSub`, `responsePubSub`)
 - **Tuple Pattern**: Each channel is a 3-element tuple: `[update, subscribe, get]`
@@ -52,7 +52,7 @@ A WebAssembly (WASM) based integration of `llama.cpp` for running LLMs on the CP
 
 ### AI Horde
 
-A crowdsourced distributed cluster of workers providing AI inference. MiniSearch integrates with it using a polling strategy against the `/generate/text/status` endpoint.
+A crowdsourced distributed cluster of workers providing AI inference. RustSearch integrates with it using a polling strategy against the `/generate/text/status` endpoint.
 
 - **Kudos**: Virtual currency used by the Horde. Default anonymous key is `0000000000`
 - **Polling**: Requests sent to async API, status checked periodically until completion
@@ -78,13 +78,13 @@ GGML Universal File format. Binary format for storing LLM weights, optimized for
 
 ### Dexie
 
-A minimalist wrapper for IndexedDB used for client-side persistence. MiniSearch uses two Dexie databases:
+A minimalist wrapper for IndexedDB used for client-side persistence. RustSearch uses two Dexie databases:
 - **SearchCacheDatabase**: Temporary cache with TTL-based expiration
 - **HistoryDatabase**: Long-term search history with retention policies
 
 ### Vite Server Hooks
 
-Middleware registered via Vite plugin hooks (`configureServer`, `configurePreviewServer`). All server-side logic in MiniSearch is implemented as hooks:
+Middleware registered via Vite plugin hooks (`configureServer`, `configurePreviewServer`). All server-side logic in RustSearch is implemented as hooks:
 
 | Hook | Purpose |
 |------|---------|

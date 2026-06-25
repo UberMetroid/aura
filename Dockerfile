@@ -1,93 +1,86 @@
-FROM node:lts AS llama-builder
+# Stage 1: Build frontend using Trunk
+FROM rust:alpine AS frontend-builder
+RUN apk add --no-cache musl-dev curl tar
+RUN rustup target add wasm32-unknown-unknown
+RUN curl -L https://github.com/trunk-rs/trunk/releases/latest/download/trunk-x86_64-unknown-linux-musl.tar.gz | tar -xzf- -C /usr/local/bin
+WORKDIR /app
+COPY . .
+RUN cd frontend && trunk build --release
 
-ARG LLAMA_CPP_RELEASE_TAG="b6604"
+# Stage 2: Build backend Rust server
+FROM rust:alpine AS backend-builder
+RUN apk add --no-cache musl-dev git
+WORKDIR /app
+COPY . .
+RUN cargo build --release --bin rust-search
 
-RUN apt-get update && apt-get install -y \
-  build-essential \
-  cmake \
-  ccache \
-  git \
-  curl
-
-RUN cd /tmp && \
-  git clone https://github.com/ggerganov/llama.cpp.git && \
-  cd llama.cpp && \
-  git checkout $LLAMA_CPP_RELEASE_TAG && \
-  cmake -B build -DGGML_NATIVE=OFF -DLLAMA_CURL=OFF && \
-  cmake --build build --config Release -j --target llama-server && \
-  mkdir -p /usr/local/lib/llama && \
-  find build -type f \( -name "libllama.so" -o -name "libmtmd.so" -o -name "libggml.so" -o -name "libggml-base.so" -o -name "libggml-cpu.so" \) -exec cp {} /usr/local/lib/llama/ \;
-
-FROM node:lts
-
-ENV PORT=7860
+# Stage 3: Runner stage
+FROM alpine:latest
+ENV PORT=4408
 EXPOSE $PORT
 
-ARG USERNAME=node
-ARG HOME_DIR=/home/${USERNAME}
-ARG APP_DIR=${HOME_DIR}/app
-
-RUN apt-get update && \
-  apt-get install -y --no-install-recommends \
+# Install SearXNG run dependencies and runtime shared libraries
+RUN apk add --no-cache \
   python3 \
-  python3-venv && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
+  py3-pip \
+  libstdc++ \
+  openssl \
+  libffi \
+  libxml2 \
+  libxslt \
+  git \
+  bash \
+  curl \
+  ca-certificates
 
-RUN mkdir -p /usr/local/searxng /etc/searxng && \
-  chown -R ${USERNAME}:${USERNAME} /usr/local/searxng /etc/searxng && \
-  chmod 755 /etc/searxng
+# Install compilation headers (will be deleted after pip build)
+RUN apk add --no-cache --virtual .build-deps \
+  python3-dev \
+  build-base \
+  libffi-dev \
+  openssl-dev \
+  libxml2-dev \
+  libxslt-dev
 
+# Create searxng folders
+RUN mkdir -p /usr/local/searxng /etc/searxng
+
+# Set up SearXNG Python environment
 WORKDIR /usr/local/searxng
 RUN python3 -m venv searxng-venv && \
-  chown -R ${USERNAME}:${USERNAME} /usr/local/searxng/searxng-venv && \
   /usr/local/searxng/searxng-venv/bin/pip install --upgrade pip && \
   /usr/local/searxng/searxng-venv/bin/pip install wheel setuptools pyyaml lxml
 
+# Copy SearXNG settings override
+COPY searxng-settings.yml /etc/searxng/settings.yml
+
+# Clone and install SearXNG
 RUN git clone https://github.com/searxng/searxng.git /usr/local/searxng/searxng-src && \
-  chown -R ${USERNAME}:${USERNAME} /usr/local/searxng/searxng-src
-
-ARG SEARXNG_SETTINGS_PATH="/etc/searxng/settings.yml"
-
-COPY --chown=${USERNAME}:${USERNAME} searxng-settings.yml $SEARXNG_SETTINGS_PATH
-
-WORKDIR /usr/local/searxng/searxng-src
-RUN chmod 644 $SEARXNG_SETTINGS_PATH && \
-  sed -i 's/ultrasecretkey/'$(openssl rand -hex 32)'/g' $SEARXNG_SETTINGS_PATH && \
+  cd /usr/local/searxng/searxng-src && \
+  sed -i 's/ultrasecretkey/'$(openssl rand -hex 32)'/g' /etc/searxng/settings.yml && \
   /usr/local/searxng/searxng-venv/bin/pip install -r requirements.txt && \
   /usr/local/searxng/searxng-venv/bin/pip install --no-build-isolation -e .
 
-COPY --from=llama-builder /tmp/llama.cpp/build/bin/llama-server /usr/local/bin/
-COPY --from=llama-builder /usr/local/lib/llama/* /usr/local/lib/
-RUN ldconfig /usr/local/lib
+# Clean up dev headers to keep image slim
+RUN apk del .build-deps
 
-USER ${USERNAME}
+# Copy compiled backend from Stage 2
+COPY --from=backend-builder /app/target/release/rust-search /usr/local/bin/rust-search
 
-WORKDIR ${APP_DIR}
+# Copy compiled frontend from Stage 1 to a permanent location outside of possible dev volumes
+COPY --from=frontend-builder /app/frontend/dist /var/www/rustsearch
 
-ARG ACCESS_KEYS
-ARG ACCESS_KEY_TIMEOUT_HOURS
-ARG WLLAMA_DEFAULT_MODEL_ID
-ARG INTERNAL_OPENAI_COMPATIBLE_API_BASE_URL
-ARG INTERNAL_OPENAI_COMPATIBLE_API_KEY
-ARG INTERNAL_OPENAI_COMPATIBLE_API_MODEL
-ARG INTERNAL_OPENAI_COMPATIBLE_API_NAME
-ARG DEFAULT_INFERENCE_TYPE
-ARG HOST
-ARG HMR_PORT
-ARG ALLOWED_HOSTS
+# Set static dir env var pointing to the permanent location
+ENV STATIC_DIR=/var/www/rustsearch
+ENV PORT=4408
+ENV NODE_ENV=production
+ENV LOG_DIR=/app/log
 
-COPY --chown=${USERNAME}:${USERNAME} ./package.json ./package-lock.json ./.npmrc ./
+# Set execute permissions
+RUN chmod +x /usr/local/bin/rust-search
 
-RUN npm ci
+# Healthcheck on the Rust server status endpoint
+HEALTHCHECK --interval=5m CMD curl -f http://localhost:4408/status || exit 1
 
-COPY --chown=${USERNAME}:${USERNAME} . .
-
-RUN git config --global --add safe.directory ${APP_DIR} && \
-  npm run build
-
-HEALTHCHECK --interval=5m CMD curl -f http://localhost:7860/status || exit 1
-
-ENTRYPOINT [ "/bin/sh", "-c" ]
-
-CMD ["(cd /usr/local/searxng/searxng-src && /usr/local/searxng/searxng-venv/bin/python -m searx.webapp > /dev/null 2>&1) & npm start -- --host"]
+# Start SearXNG in background and RustSearch server in foreground
+CMD ["/bin/sh", "-c", "(cd /usr/local/searxng/searxng-src && /usr/local/searxng/searxng-venv/bin/python -m searx.webapp > /dev/null 2>&1) & rust-search"]

@@ -1,9 +1,0 @@
-name: On Pull Request To Main
-on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    branches: ["main"]
-jobs:
-  check-docker:
-    if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip-check-docker') }}
-    uses: ./.github/workflows/reusable-check-docker.yml

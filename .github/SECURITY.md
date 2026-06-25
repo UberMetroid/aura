@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Only the latest version of MiniSearch receives security updates.
+Only the latest version of RustSearch receives security updates.
 
 | Version | Supported |
 |---------|------------|
@@ -39,7 +39,7 @@ When reporting a vulnerability, please include:
 
 ### In Scope
 
-- Vulnerabilities in the MiniSearch web application
+- Vulnerabilities in the RustSearch web application
 - Security issues in the Docker container configuration
 - Authentication and authorization bypasses
 - Cross-site scripting (XSS) vulnerabilities
@@ -58,9 +58,9 @@ When reporting a vulnerability, please include:
 
 ## Threat Model
 
-### MiniSearch's Security Boundaries
+### RustSearch's Security Boundaries
 
-MiniSearch is designed as a privacy-focused search application with the following security assumptions:
+RustSearch is designed as a privacy-focused search application with the following security assumptions:
 
 **Trust Boundaries:**
 - **Browser Environment**: The application runs entirely in the user's browser
@@ -89,7 +89,7 @@ MiniSearch is designed as a privacy-focused search application with the followin
 
 ### For Users
 
-- Always use HTTPS when accessing MiniSearch instances
+- Always use HTTPS when accessing RustSearch instances
 - Configure trusted SearXNG instances
 - Use local AI models for maximum privacy
 - Set access keys for deployed instances
@@ -121,12 +121,12 @@ Security updates will be:
 
 ## Security Team
 
-The MiniSearch security team is currently the project maintainer:
-- [@felladrin](https://github.com/felladrin) - Project Maintainer
+The RustSearch security team is currently the project maintainer:
+- [@UberMetroid](https://github.com/UberMetroid) - Project Maintainer
 
 ## Acknowledgments
 
-We thank security researchers who help us keep MiniSearch secure. All valid security reports will be acknowledged in our release notes (with reporter permission).
+We thank security researchers who help us keep RustSearch secure. All valid security reports will be acknowledged in our release notes (with reporter permission).
 
 ## Related Resources
 

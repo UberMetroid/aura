@@ -1,6 +1,6 @@
 # Search Result Reranking
 
-MiniSearch optionally reranks search results using a cross-encoder model running on a local `llama-server` instance. This secondary search stage reorders initial SearXNG results based on their semantic relevance to the user's query.
+RustSearch optionally reranks search results using a cross-encoder model running on a local `llama-server` instance. This secondary search stage reorders initial SearXNG results based on their semantic relevance to the user's query.
 
 ## Architecture Overview
 

@@ -1,7 +1,0 @@
-name: On Push To Main
-on:
-  push:
-    branches: ["main"]
-jobs:
-  check-docker:
-    uses: ./.github/workflows/reusable-check-docker.yml

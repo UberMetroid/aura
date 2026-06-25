@@ -1,6 +1,6 @@
 # AI Integration
 
-MiniSearch supports four AI inference backends, each with different trade-offs between privacy, performance, and setup complexity.
+RustSearch supports four AI inference backends, each with different trade-offs between privacy, performance, and setup complexity.
 
 ## Inference Types Overview
 

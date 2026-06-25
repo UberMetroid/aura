@@ -1,9 +1,11 @@
 node_modules
 .DS_Store
-/client/dist
-/server/models
+/backend/models
+/models
+rustsearch-errors.log
 .vscode
-/vite-build-stats.html
 .env
-/coverage
-.playwright-cli
+/frontend/dist
+
+# Added by cargo
+/target
