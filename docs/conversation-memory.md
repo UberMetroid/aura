@@ -2,7 +2,7 @@
 # Conversation Memory System
 
 ## Purpose
-Long-running chats can easily exceed the model context window. RustSearch addresses this by keeping a rolling, extractive summary of prior turns and only feeding the freshest messages into the model alongside that summary. All context handling happens locally in the browser to preserve privacy. @client/modules/textGeneration.ts#262-370
+Long-running chats can easily exceed the model context window. Aura addresses this by keeping a rolling, extractive summary of prior turns and only feeding the freshest messages into the model alongside that summary. All context handling happens locally in the browser to preserve privacy. @client/modules/textGeneration.ts#262-370
 
 ## Components
 1. **Token Budgeting** – `generateChatResponse` measures the system prompt and a stub "Ok!" assistant reply, then caps the rest of the user/assistant turns at 75% of the default 4096-token window (≈3072 tokens) to leave headroom for the response. A GPT tokenizer keeps count per message before inclusion. @client/modules/textGeneration.ts#292-313 @client/modules/textGenerationUtilities.ts#16

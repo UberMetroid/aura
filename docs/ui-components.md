@@ -2,7 +2,7 @@
 
 ## Architecture Overview
 
-RustSearch uses a **PubSub-based reactive architecture**. Components subscribe to state changes via channels rather than props drilling or Context API.
+Aura uses a **PubSub-based reactive architecture**. Components subscribe to state changes via channels rather than props drilling or Context API.
 
 ### PubSub Pattern
 

@@ -82,8 +82,8 @@ body:
   - type: input
     id: version
     attributes:
-      label: RustSearch version
-      description: What version of RustSearch are you using?
+      label: Aura version
+      description: What version of Aura are you using?
       placeholder: latest, v1.0.0, etc.
     validations:
       required: true
@@ -105,7 +105,7 @@ body:
     id: deployment-type
     attributes:
       label: Deployment type
-      description: How are you running RustSearch?
+      description: How are you running Aura?
       options:
         - Docker image
         - Building from source

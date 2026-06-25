@@ -1,7 +1,7 @@
-# SearXNG settings for RustSearch.
+# SearXNG settings for Aura.
 #
 # Built on top of SearXNG's upstream defaults via `use_default_settings`, so this
-# file only declares what RustSearch overrides:
+# file only declares what Aura overrides:
 #   - JSON output format (consumed by server/webSearchService.ts)
 #   - an explicit, resilient set of general-web engines
 #

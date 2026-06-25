@@ -1,7 +1,7 @@
 # Search History System
 
 ## Overview
-RustSearch keeps a local-first record of every search so agents can resurface text results, image results, and generated responses without hitting remote services again. All persistence lives inside the browser via Dexie/IndexedDB and is never synced to external servers, preserving the privacy posture of the app.
+Aura keeps a local-first record of every search so agents can resurface text results, image results, and generated responses without hitting remote services again. All persistence lives inside the browser via Dexie/IndexedDB and is never synced to external servers, preserving the privacy posture of the app.
 
 ## Data Model and Storage
 The `HistoryDatabase` Dexie instance stores three related tables:
@@ -44,7 +44,7 @@ The History Drawer Analytics tab renders the compact `SearchStats` cards scoped 
 
 ## Search Cache System
 
-Alongside the history database, RustSearch uses a separate `SearchCacheDatabase` for temporary result caching:
+Alongside the history database, Aura uses a separate `SearchCacheDatabase` for temporary result caching:
 
 **Schema:**
 | Store | Key | Index | Entry Type |

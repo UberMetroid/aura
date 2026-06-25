@@ -1,6 +1,6 @@
 # AI Integration
 
-RustSearch supports four AI inference backends, each with different trade-offs between privacy, performance, and setup complexity.
+Aura supports four AI inference backends, each with different trade-offs between privacy, performance, and setup complexity.
 
 ## Inference Types Overview
 

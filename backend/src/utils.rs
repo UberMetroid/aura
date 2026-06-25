@@ -84,7 +84,7 @@ pub fn log_error_to_file(context: &str, error_msg: &str) {
     if let Ok(mut file) = OpenOptions::new()
         .create(true)
         .append(true)
-        .open("rustsearch-errors.log")
+        .open("aura-errors.log")
     {
         let _ = file.write_all(log_line.as_bytes());
     }

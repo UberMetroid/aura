@@ -1,14 +1,14 @@
-# RustSearch Overview
+# Aura Overview
 
 ## System Purpose and Design Philosophy
 
-RustSearch serves as a privacy-preserving search interface with optional AI augmentation. The system prioritizes user privacy by routing all web searches through SearXNG, which aggregates results from multiple search engines without tracking. AI processing can occur entirely client-side in the browser, ensuring no user queries or responses leave the device.
+Aura serves as a privacy-preserving search interface with optional AI augmentation. The system prioritizes user privacy by routing all web searches through SearXNG, which aggregates results from multiple search engines without tracking. AI processing can occur entirely client-side in the browser, ensuring no user queries or responses leave the device.
 
 The architecture follows a layered design where search, AI inference, and presentation concerns are separated.
 
 ## Core Technologies and Dependencies
 
-RustSearch integrates multiple technology stacks within a unified deployment container:
+Aura integrates multiple technology stacks within a unified deployment container:
 
 ### Frontend
 - **React** - UI framework
@@ -48,13 +48,13 @@ The multi-stage build process first compiles llama-server from source, then crea
 
 ## State Management Architecture
 
-RustSearch uses a PubSub pattern for state management rather than React Context, enabling loose coupling between components and business logic modules:
+Aura uses a PubSub pattern for state management rather than React Context, enabling loose coupling between components and business logic modules:
 
 PubSub channels are created using the create-pubsub package and provide type-safe publish/subscribe interfaces. Components subscribe via the usePubSub hook, and business logic modules publish state updates directly.
 
 ## Data Persistence Strategy
 
-RustSearch employs a dual-layer persistence approach:
+Aura employs a dual-layer persistence approach:
 - **IndexedDB** - Local storage for search history, settings, cached results, and saved AI transcripts
 - **TTL-based caching** - 15-minute cache for search results to minimize API calls
 
@@ -118,14 +118,14 @@ The `textGeneration` module orchestrates the entire search-to-response flow, man
 CSRF protection uses a build-time generated token:
 
 1. **Generation**: Token created at build time in `vite.config.ts` and injected as `VITE_SEARCH_TOKEN`
-2. **Storage**: Server stores token file at `{os.tempdir()}/rustsearch-token`
+2. **Storage**: Server stores token file at `{os.tempdir()}/aura-token`
 3. **Client Hashing**: Client hashes token before sending in requests (never sends raw token)
 4. **Verification**: Server compares request hash against stored token
 5. **Caching**: Verified tokens stored in `server/verifiedTokens.ts` (in-memory `Set<string>`) to avoid redundant cryptographic operations
 
 ## Data Flow and Communication
 
-RustSearch uses a PubSub-based architecture where state flows through independent channels. Components subscribe only to the channels they need, minimizing unnecessary re-renders.
+Aura uses a PubSub-based architecture where state flows through independent channels. Components subscribe only to the channels they need, minimizing unnecessary re-renders.
 
 ### State Machine Transitions
 
@@ -178,7 +178,7 @@ The build pipeline uses Biome for linting and formatting, TypeScript for type ch
 
 ## Server Hook System
 
-RustSearch implements all server-side logic as Vite plugin hooks. Each hook registers middleware on Vite's HTTP server, working identically in both dev (`vite`) and production preview (`vite preview`) modes. Hooks are declared in `vite.config.ts` and registered via `configureServer`/`configurePreviewServer` callbacks.
+Aura implements all server-side logic as Vite plugin hooks. Each hook registers middleware on Vite's HTTP server, working identically in both dev (`vite`) and production preview (`vite preview`) modes. Hooks are declared in `vite.config.ts` and registered via `configureServer`/`configurePreviewServer` callbacks.
 
 | Hook | File | Purpose |
 |------|------|---------|
@@ -194,7 +194,7 @@ RustSearch implements all server-side logic as Vite plugin hooks. Each hook regi
 Key server-side modules:
 
 - **`server/webSearchService.ts`**: Integrates with SearXNG at `http://127.0.0.1:8888`. Implements a circuit breaker (opens after 5 failures, resets after 60s) and retry logic (up to 3 retries with exponential backoff for 500 errors).
-- **`server/searchToken.ts`**: Manages a token at `{os.tempdir()}/rustsearch-token` used for CSRF protection on search requests.
+- **`server/searchToken.ts`**: Manages a token at `{os.tempdir()}/aura-token` used for CSRF protection on search requests.
 - **`server/verifiedTokens.ts`**: In-memory `Set<string>` of verified session tokens.
 - **`server/searchesSinceLastRestart.ts`**: In-memory counters for search analytics.
 
@@ -227,7 +227,7 @@ The `/status` endpoint returns a JSON object:
 
 ## Data Persistence Architecture
 
-RustSearch uses a multi-layered client-side persistence strategy:
+Aura uses a multi-layered client-side persistence strategy:
 
 ### IndexedDB Databases
 
@@ -285,7 +285,7 @@ Lightweight state persisted across sessions via `createLocalStoragePubSub` patte
 
 ## Access Control and Security
 
-RustSearch supports optional access key authentication for restricting usage. When the ACCESS_KEYS environment variable is set, the server validates incoming requests against the configured keys. Rate limiting is applied to search and inference endpoints to prevent abuse.
+Aura supports optional access key authentication for restricting usage. When the ACCESS_KEYS environment variable is set, the server validates incoming requests against the configured keys. Rate limiting is applied to search and inference endpoints to prevent abuse.
 
 Access keys are verified server-side before proxying requests to SearXNG or processing inference requests. The ACCESS_KEY_TIMEOUT_HOURS variable controls how long a valid access key remains cached.
 

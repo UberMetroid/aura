@@ -20,7 +20,7 @@
 
 Every HTTP request from client to backend carries a `token` query parameter for CSRF protection:
 
-1. **Token Generation**: On build/startup, `regenerateSearchToken()` writes a random token to `{os.tempdir()}/rustsearch-token`
+1. **Token Generation**: On build/startup, `regenerateSearchToken()` writes a random token to `{os.tempdir()}/aura-token`
 2. **Client Injection**: The token is injected as `VITE_SEARCH_TOKEN` compile-time constant via Vite's `define` option
 3. **Per-Request Auth**: Client includes token as `?token=` parameter on all `/search/text` and `/search/images` requests
 4. **Server Verification**: `handleTokenVerification()` in `searchEndpointServerHook.ts` validates the token before proxying to SearXNG
@@ -55,7 +55,7 @@ Every HTTP request from client to backend carries a `token` query parameter for 
 
 | Module | Purpose |
 |--------|---------|
-| `server/searchToken.ts` | Reads/writes the CSRF token from `{tempdir}/rustsearch-token` |
+| `server/searchToken.ts` | Reads/writes the CSRF token from `{tempdir}/aura-token` |
 | `server/verifiedTokens.ts` | In-memory `Set<string>` of verified session tokens |
 | `server/searchesSinceLastRestart.ts` | In-memory counters for abuse monitoring |
 | `server/searchEndpointServerHook.ts` | Token verification before proxying to SearXNG |

@@ -145,7 +145,7 @@ pub async fn handle_verify_pin(
             .unwrap_or(false);
 
         let cookie = axum_extra::extract::cookie::Cookie::build((
-            "RUSTSEARCH_PIN",
+            "AURA_PIN",
             auth::hash_pin(&payload.pin),
         ))
         .http_only(true)
@@ -196,7 +196,7 @@ pub async fn handle_verify_pin(
 pub async fn handle_logout(
     cookie_jar: axum_extra::extract::cookie::CookieJar,
 ) -> impl IntoResponse {
-    let cookie = axum_extra::extract::cookie::Cookie::build(("RUSTSEARCH_PIN", ""))
+    let cookie = axum_extra::extract::cookie::Cookie::build(("AURA_PIN", ""))
         .path("/")
         .build();
     (StatusCode::OK, cookie_jar.remove(cookie))

@@ -1,12 +1,12 @@
-# Contributing to RustSearch
+# Contributing to Aura
 
-First off, thank you for considering contributing to RustSearch! It's people like you that make RustSearch such a great tool.
+First off, thank you for considering contributing to Aura! It's people like you that make Aura such a great tool.
 
 ## How to Contribute
 
 ### Reporting Bugs
 
-- Use the [GitHub issue tracker](https://github.com/UberMetroid/RustSearch/issues) to report bugs
+- Use the [GitHub issue tracker](https://github.com/UberMetroid/Aura/issues) to report bugs
 - Check if the issue has already been reported before creating a new one
 - Provide clear steps to reproduce the issue
 - Include your environment details (OS, browser, Docker version if applicable)
@@ -14,7 +14,7 @@ First off, thank you for considering contributing to RustSearch! It's people lik
 
 ### Suggesting Features
 
-- Use the [GitHub issue tracker](https://github.com/UberMetroid/RustSearch/issues) for feature suggestions
+- Use the [GitHub issue tracker](https://github.com/UberMetroid/Aura/issues) for feature suggestions
 - Clearly describe the feature and why it would be useful
 - Consider if it fits with the project's minimalist philosophy
 - Provide examples of how you envision the feature working
@@ -71,7 +71,7 @@ This runs:
 
 ### Project Vision
 
-RustSearch aims to be a minimalist, privacy-focused web search application with AI assistance. We prioritize:
+Aura aims to be a minimalist, privacy-focused web search application with AI assistance. We prioritize:
 - Privacy and security
 - Simplicity and ease of use
 - Cross-platform compatibility
@@ -127,4 +127,4 @@ Don't hesitate to ask questions! We're here to help you contribute successfully.
 
 ---
 
-Thanks again for your interest in contributing to RustSearch! 🎉
+Thanks again for your interest in contributing to Aura! 🎉

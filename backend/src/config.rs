@@ -28,7 +28,7 @@ impl Config {
             .and_then(|p| p.parse().ok())
             .unwrap_or(4408);
 
-        let pin = env::var("RUSTSEARCH_PIN")
+        let pin = env::var("AURA_PIN")
             .or_else(|_| env::var("PIN"))
             .ok()
             .filter(|p| !p.trim().is_empty());

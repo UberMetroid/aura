@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Only the latest version of RustSearch receives security updates.
+Only the latest version of Aura receives security updates.
 
 | Version | Supported |
 |---------|------------|
@@ -39,7 +39,7 @@ When reporting a vulnerability, please include:
 
 ### In Scope
 
-- Vulnerabilities in the RustSearch web application
+- Vulnerabilities in the Aura web application
 - Security issues in the Docker container configuration
 - Authentication and authorization bypasses
 - Cross-site scripting (XSS) vulnerabilities
@@ -58,9 +58,9 @@ When reporting a vulnerability, please include:
 
 ## Threat Model
 
-### RustSearch's Security Boundaries
+### Aura's Security Boundaries
 
-RustSearch is designed as a privacy-focused search application with the following security assumptions:
+Aura is designed as a privacy-focused search application with the following security assumptions:
 
 **Trust Boundaries:**
 - **Browser Environment**: The application runs entirely in the user's browser
@@ -89,7 +89,7 @@ RustSearch is designed as a privacy-focused search application with the followin
 
 ### For Users
 
-- Always use HTTPS when accessing RustSearch instances
+- Always use HTTPS when accessing Aura instances
 - Configure trusted SearXNG instances
 - Use local AI models for maximum privacy
 - Set access keys for deployed instances
@@ -121,12 +121,12 @@ Security updates will be:
 
 ## Security Team
 
-The RustSearch security team is currently the project maintainer:
+The Aura security team is currently the project maintainer:
 - [@UberMetroid](https://github.com/UberMetroid) - Project Maintainer
 
 ## Acknowledgments
 
-We thank security researchers who help us keep RustSearch secure. All valid security reports will be acknowledged in our release notes (with reporter permission).
+We thank security researchers who help us keep Aura secure. All valid security reports will be acknowledged in our release notes (with reporter permission).
 
 ## Related Resources
 

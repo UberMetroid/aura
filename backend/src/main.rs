@@ -96,7 +96,7 @@ async fn main() {
         .with(file_layer_app)
         .init();
 
-    info!("Starting RustSearch server...");
+    info!("Starting Aura server...");
 
     let config = Config::load();
 
@@ -158,7 +158,7 @@ async fn main() {
         .parse()
         .expect("Invalid host/port format");
 
-    info!("RustSearch server listening on http://{}", addr);
+    info!("Aura server listening on http://{}", addr);
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
     axum::serve(
         listener,

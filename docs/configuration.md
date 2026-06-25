@@ -268,7 +268,7 @@ INTERNAL_OPENAI_COMPATIBLE_API_MODEL="llama-3.1-70b"
 Enable verbose logging:
 ```bash
 # In browser console
-localStorage.setItem('debug', 'rustsearch:*');
+localStorage.setItem('debug', 'aura:*');
 ```
 
 Check effective configuration:

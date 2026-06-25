@@ -13,8 +13,8 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/UberMetroid/RustSearch.git
-cd RustSearch
+git clone https://github.com/UberMetroid/Aura.git
+cd Aura
 
 # Start all services (SearXNG, Node.js app with HMR)
 docker compose up
@@ -69,7 +69,7 @@ Development mode overrides the container command to run `npm install && npm run 
 
 ### No Configuration Required (Default)
 
-RustSearch works out of the box with browser-based AI inference. Search works immediately, and AI responses use on-device models via Wllama (WebGPU-accelerated when available, CPU otherwise).
+Aura works out of the box with browser-based AI inference. Search works immediately, and AI responses use on-device models via Wllama (WebGPU-accelerated when available, CPU otherwise).
 
 ### Optional: Enable AI Response
 

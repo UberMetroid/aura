@@ -28,7 +28,7 @@ impl AuthState {
             None => return true,
         };
 
-        let cookie_pin = cookie_jar.get("RUSTSEARCH_PIN").map(|c| c.value());
+        let cookie_pin = cookie_jar.get("AURA_PIN").map(|c| c.value());
         let header_pin = headers.get("x-pin").and_then(|h| h.to_str().ok());
 
         match (cookie_pin, header_pin) {

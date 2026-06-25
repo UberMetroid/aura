@@ -68,10 +68,10 @@ RUN apk del .build-deps
 COPY --from=backend-builder /app/target/release/rust-search /usr/local/bin/rust-search
 
 # Copy compiled frontend from Stage 1 to a permanent location outside of possible dev volumes
-COPY --from=frontend-builder /app/frontend/dist /var/www/rustsearch
+COPY --from=frontend-builder /app/frontend/dist /var/www/aura
 
 # Set static dir env var pointing to the permanent location
-ENV STATIC_DIR=/var/www/rustsearch
+ENV STATIC_DIR=/var/www/aura
 ENV PORT=4408
 ENV NODE_ENV=production
 ENV LOG_DIR=/app/log
@@ -82,5 +82,5 @@ RUN chmod +x /usr/local/bin/rust-search
 # Healthcheck on the Rust server status endpoint
 HEALTHCHECK --interval=5m CMD curl -f http://localhost:4408/status || exit 1
 
-# Start SearXNG in background and RustSearch server in foreground
+# Start SearXNG in background and Aura server in foreground
 CMD ["/bin/sh", "-c", "(cd /usr/local/searxng/searxng-src && /usr/local/searxng/searxng-venv/bin/python -m searx.webapp > /dev/null 2>&1) & rust-search"]

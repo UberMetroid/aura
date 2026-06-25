@@ -613,7 +613,7 @@ dependencies = [
 
 [[package]]
 name = "frontend"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "console_error_panic_hook",
  "futures",
@@ -1981,7 +1981,7 @@ dependencies = [
 
 [[package]]
 name = "rust-search"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "argon2",
  "axum",

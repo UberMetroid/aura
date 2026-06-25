@@ -1,4 +1,4 @@
-# RustSearch Agent Guidelines
+# Aura Agent Guidelines
 
 This is your navigation hub. Start here, follow the links, and return when you need orientation.
 

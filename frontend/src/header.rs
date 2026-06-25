@@ -35,7 +35,7 @@ where
     view! {
         <header>
             <div id="header-title">
-                <h1>"RustSearch"</h1>
+                <h1>"Aura"</h1>
             </div>
             <div class="header-right">
                 {move || if enable_translation.get() {
