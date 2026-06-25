@@ -21,15 +21,20 @@
         };
 
         # 1. Build the WASM frontend
-        frontend = pkgs.stdenv.mkDerivation {
+        frontend = rustPlatform.buildRustPackage {
           pname = "aura-frontend";
           version = "1.0.0";
           src = ./.;
+
+          cargoLock = {
+            lockFile = ./Cargo.lock;
+          };
 
           nativeBuildInputs = [
             rustVersion
             pkgs.wasm-bindgen-cli
             pkgs.trunk
+            pkgs.binaryen
           ];
 
           buildPhase = ''
@@ -69,17 +74,29 @@
           '';
         };
 
-        # 3. Create the layered Docker container image
+        # 3. Create entrypoint script for launching SearXNG and backend
+        auraStart = pkgs.writeShellScriptBin "aura-start" ''
+          export PATH="${pkgs.openssl}/bin:$PATH"
+          if [ -z "$SEARXNG_SECRET" ]; then
+            export SEARXNG_SECRET=$(openssl rand -hex 32)
+          fi
+          export SEARXNG_SETTINGS_PATH=/app/searxng-settings.yml
+          ${pkgs.searxng}/bin/searxng-run > /dev/null 2>&1 &
+          exec ${backend}/bin/rust-search
+        '';
+
+        # 4. Create the layered Docker container image
         dockerImage = pkgs.dockerTools.buildLayeredImage {
           name = "aura-nix";
           tag = "latest";
           
           # Run under the nobody user (UID 65534)
           config = {
-            Cmd = [ "${backend}/bin/rust-search" ];
+            Cmd = [ "${auraStart}/bin/aura-start" ];
             WorkingDir = "/app";
             Env = [
               "PORT=4408"
+              "STATIC_DIR=/app/frontend/dist"
             ];
             ExposedPorts = {
               "4408/tcp" = {};
@@ -91,12 +108,13 @@
           extraCommands = ''
             mkdir -p app/frontend
             cp -r ${frontend}/dist app/frontend/dist
+            cp ${./searxng-settings.yml} app/searxng-settings.yml
           '';
         };
 
       in {
         packages = {
-          inherit frontend backend dockerImage;
+          inherit frontend backend auraStart dockerImage;
           default = dockerImage;
         };
 
