@@ -1,11 +1,35 @@
-node_modules
-.DS_Store
+# Rust build artifacts
+target/
+**/target/
+
+# Trunk build artifacts
+dist/
+frontend/dist/
+frontend/target/
+
+# Local configuration
+.env
+.env.local
+.env.*.local
+
+# Local databases and user data
+data/
+uploads/
+local_uploads/
 /backend/models
 /models
 rustsearch-errors.log
-.vscode
-.env
-/frontend/dist
 
-# Added by cargo
-/target
+# IDE/Editor config
+.vscode/
+.idea/
+*.swp
+*.swo
+.cursor/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Other
+node_modules/

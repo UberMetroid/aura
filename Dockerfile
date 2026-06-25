@@ -1,5 +1,5 @@
 # Stage 1: Build frontend using Trunk
-FROM rust:alpine AS frontend-builder
+FROM rust:1.96-alpine AS frontend-builder
 RUN apk add --no-cache musl-dev curl tar
 RUN rustup target add wasm32-unknown-unknown
 RUN curl -L https://github.com/trunk-rs/trunk/releases/latest/download/trunk-x86_64-unknown-linux-musl.tar.gz | tar -xzf- -C /usr/local/bin
@@ -8,7 +8,7 @@ COPY . .
 RUN cd frontend && trunk build --release
 
 # Stage 2: Build backend Rust server
-FROM rust:alpine AS backend-builder
+FROM rust:1.96-alpine AS backend-builder
 RUN apk add --no-cache musl-dev git
 WORKDIR /app
 COPY . .
