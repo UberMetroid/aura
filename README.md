@@ -35,6 +35,14 @@ docker compose up -d
 
 3. Open your browser and navigate to `http://localhost:4408`.
 
+### Building the Image Locally
+
+To build the Docker container locally from the source files:
+
+```bash
+docker build -t ubermetroid/aura:latest .
+```
+
 
 ---
 
