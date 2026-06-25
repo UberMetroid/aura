@@ -4,6 +4,15 @@ Aura is a blazing fast, privacy-focused search engine with an integrated AI assi
 
 ---
 
+## 📦 Container Registry
+
+The Docker image is published to the following registries:
+
+*   **Docker Hub (Recommended)**: [ubermetroid/aura](https://hub.docker.com/r/ubermetroid/aura)
+*   **GitHub Container Registry (GHCR)**: [ghcr.io/ubermetroid/aura](https://github.com/UberMetroid/aura/pkgs/container/aura)
+
+---
+
 ## 🐳 Container Installation
 
 
