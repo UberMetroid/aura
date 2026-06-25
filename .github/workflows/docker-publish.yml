@@ -64,6 +64,8 @@ jobs:
             if [ "${{ github.ref }}" = "refs/heads/main" ]; then
               TAGS="${TAGS},${LOWER_IMAGE_NAME_DOCKER}:latest"
             fi
+          else
+            TAGS="${LOWER_IMAGE_NAME_DOCKER}:latest"
           fi
           
           echo "TAGS=${TAGS}" >> $GITHUB_OUTPUT
@@ -74,7 +76,7 @@ jobs:
         with:
           context: .
           platforms: ${{ env.PLATFORMS }}
-          push: true
+          push: ${{ env.DOCKER_USERNAME != '' && env.DOCKER_PASSWORD != '' }}
           tags: ${{ steps.meta.outputs.TAGS }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
