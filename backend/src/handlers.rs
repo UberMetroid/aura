@@ -145,9 +145,12 @@ pub async fn handle_verify_pin(
             .map(|v| v.eq_ignore_ascii_case("https"))
             .unwrap_or(false);
 
+        let session_id = auth::generate_session_id();
+        state.auth.active_sessions.insert(session_id.clone());
+
         let cookie = axum_extra::extract::cookie::Cookie::build((
             "AURA_PIN",
-            auth::hash_pin(&payload.pin),
+            session_id,
         ))
         .http_only(true)
         .secure(is_secure)
@@ -195,8 +198,12 @@ pub async fn handle_verify_pin(
 }
 
 pub async fn handle_logout(
+    State(state): State<AppState>,
     cookie_jar: axum_extra::extract::cookie::CookieJar,
 ) -> impl IntoResponse {
+    if let Some(cookie) = cookie_jar.get("AURA_PIN") {
+        state.auth.active_sessions.remove(cookie.value());
+    }
     let cookie = axum_extra::extract::cookie::Cookie::build(("AURA_PIN", ""))
         .path("/")
         .build();

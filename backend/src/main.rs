@@ -106,7 +106,7 @@ async fn main() {
         config.enable_translation,
     ));
 
-    // Spawn periodic login attempts cleaner to prevent memory leaks
+    // Spawn periodic login attempts and rate limit cleaner to prevent memory leaks
     let clean_auth = auth.clone();
     tokio::spawn(async move {
         loop {
@@ -114,6 +114,7 @@ async fn main() {
             clean_auth.login_attempts.retain(|_, (_, last_time)| {
                 last_time.elapsed() < std::time::Duration::from_secs(15 * 60)
             });
+            clean_auth.clean_old_rate_limits();
         }
     });
 
@@ -141,6 +142,10 @@ async fn main() {
         .route("/api/generate-invoke-image", post(invoke::handle_generate_invoke_image))
         .route("/api/invoke-image-status/:item_id", get(invoke::handle_invoke_image_status))
         .route("/api/invoke-image-file/:image_name", get(invoke::handle_invoke_image_file))
+        .layer(middleware::from_fn_with_state(
+            auth.clone(),
+            auth::rate_limit_middleware,
+        ))
         .with_state(state.clone());
 
     let static_service =

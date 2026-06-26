@@ -31,7 +31,11 @@ impl Config {
         let pin = env::var("AURA_PIN")
             .or_else(|_| env::var("PIN"))
             .ok()
-            .filter(|p| !p.trim().is_empty());
+            .filter(|p| {
+                !p.is_empty()
+                    && p.len() >= 4
+                    && p.len() <= 64
+            });
 
         let max_attempts = env::var("MAX_ATTEMPTS")
             .ok()
