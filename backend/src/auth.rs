@@ -1,4 +1,9 @@
-use axum::{extract::ConnectInfo, http::{HeaderMap, StatusCode}, middleware::Next, response::{IntoResponse, Response}};
+use axum::{
+    extract::ConnectInfo,
+    http::{HeaderMap, StatusCode},
+    middleware::Next,
+    response::{IntoResponse, Response},
+};
 use axum_extra::extract::cookie::CookieJar;
 use dashmap::{DashMap, DashSet};
 use std::net::SocketAddr;
@@ -47,7 +52,7 @@ impl AuthState {
         let window = std::time::Duration::from_secs(60);
         let now = Instant::now();
 
-        let mut entry = self.rate_limiter.entry(ip).or_insert_with(Vec::new);
+        let mut entry = self.rate_limiter.entry(ip).or_default();
         entry.retain(|&t| now.duration_since(t) < window);
 
         if entry.len() >= max_requests {
@@ -79,25 +84,22 @@ pub fn secure_compare(a: &str, b: &str) -> bool {
     diff == 0
 }
 
-
-
 pub fn get_client_ip(connect_info: &ConnectInfo<SocketAddr>, headers: &HeaderMap) -> String {
-    if let Some(cf_connecting_ip) = headers.get("cf-connecting-ip") {
-        if let Ok(ip) = cf_connecting_ip.to_str() {
-            return ip.to_string();
-        }
+    if let Some(cf_connecting_ip) = headers.get("cf-connecting-ip")
+        && let Ok(ip) = cf_connecting_ip.to_str()
+    {
+        return ip.to_string();
     }
-    if let Some(x_forwarded_for) = headers.get("x-forwarded-for") {
-        if let Ok(ip_list) = x_forwarded_for.to_str() {
-            if let Some(ip) = ip_list.split(',').next() {
-                return ip.trim().to_string();
-            }
-        }
+    if let Some(x_forwarded_for) = headers.get("x-forwarded-for")
+        && let Ok(ip_list) = x_forwarded_for.to_str()
+        && let Some(ip) = ip_list.split(',').next()
+    {
+        return ip.trim().to_string();
     }
-    if let Some(x_real_ip) = headers.get("x-real-ip") {
-        if let Ok(ip) = x_real_ip.to_str() {
-            return ip.to_string();
-        }
+    if let Some(x_real_ip) = headers.get("x-real-ip")
+        && let Ok(ip) = x_real_ip.to_str()
+    {
+        return ip.to_string();
     }
     connect_info.ip().to_string()
 }
@@ -109,10 +111,10 @@ pub fn generate_session_id() -> String {
     use std::io::Read;
     let file = File::open("/dev/urandom").ok();
     let mut bytes = [0u8; 16];
-    if let Some(mut f) = file {
-        if f.read_exact(&mut bytes).is_ok() {
-            return bytes.iter().map(|b| format!("{:02x}", b)).collect();
-        }
+    if let Some(mut f) = file
+        && f.read_exact(&mut bytes).is_ok()
+    {
+        return bytes.iter().map(|b| format!("{:02x}", b)).collect();
     }
     let random_val = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)

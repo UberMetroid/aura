@@ -1,8 +1,8 @@
 use crate::auth::SharedAuthState;
 use crate::search::SharedSearchService;
 use serde::Serialize;
-use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::Arc;
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{Duration, Instant};
 
 pub struct StatusTracker {

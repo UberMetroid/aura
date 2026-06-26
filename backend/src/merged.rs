@@ -27,26 +27,26 @@ pub async fn search_merged(
     loop {
         let mut added = false;
 
-        if let Some(item) = grok_iter.next() {
-            if urls.insert(item.2.clone()) {
-                merged.push(item);
-                added = true;
-            }
+        if let Some(item) = grok_iter.next()
+            && urls.insert(item.2.clone())
+        {
+            merged.push(item);
+            added = true;
         }
 
-        if let Some(item) = wiki_iter.next() {
-            if urls.insert(item.2.clone()) {
-                merged.push(item);
-                added = true;
-            }
+        if let Some(item) = wiki_iter.next()
+            && urls.insert(item.2.clone())
+        {
+            merged.push(item);
+            added = true;
         }
 
         for _ in 0..2 {
-            if let Some(item) = ddg_iter.next() {
-                if urls.insert(item.2.clone()) {
-                    merged.push(item);
-                    added = true;
-                }
+            if let Some(item) = ddg_iter.next()
+                && urls.insert(item.2.clone())
+            {
+                merged.push(item);
+                added = true;
             }
         }
 

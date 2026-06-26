@@ -70,7 +70,7 @@ pub async fn fetch_thumbnail_as_data_url(
         .to_string();
 
     let bytes = response.bytes().await?;
-    use base64::{engine::general_purpose, Engine as _};
+    use base64::{Engine as _, engine::general_purpose};
     let b64 = general_purpose::STANDARD.encode(&bytes);
 
     Ok(format!("data:{};base64,{}", content_type, b64))
@@ -93,15 +93,27 @@ pub fn log_error_to_file(context: &str, error_msg: &str) {
 pub fn map_reqwest_error(e: reqwest::Error, url: &str) -> String {
     let msg = e.to_string();
     if e.is_timeout() {
-        format!("Timeout Error: Request to search service at '{}' timed out after 10 seconds. Check if SearXNG is overloaded or slow.", url)
+        format!(
+            "Timeout Error: Request to search service at '{}' timed out after 10 seconds. Check if SearXNG is overloaded or slow.",
+            url
+        )
     } else if e.is_connect() {
         if msg.contains("dns") || msg.contains("resolve") {
-            format!("DNS Error: Could not resolve hostname for search service at '{}'. Verify network DNS settings and internet connection.", url)
+            format!(
+                "DNS Error: Could not resolve hostname for search service at '{}'. Verify network DNS settings and internet connection.",
+                url
+            )
         } else {
-            format!("Connection Refused: Could not connect to search service at '{}'. Check if SearXNG is running, listening on port 8888, or blocked by a firewall.", url)
+            format!(
+                "Connection Refused: Could not connect to search service at '{}'. Check if SearXNG is running, listening on port 8888, or blocked by a firewall.",
+                url
+            )
         }
     } else if e.is_decode() {
-        format!("JSON Decode Error: Received invalid response body format from search service at '{}'. details: {}", url, msg)
+        format!(
+            "JSON Decode Error: Received invalid response body format from search service at '{}'. details: {}",
+            url, msg
+        )
     } else {
         format!(
             "HTTP Connection Error: Failed to request search service at '{}'. details: {}",

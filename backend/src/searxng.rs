@@ -123,12 +123,12 @@ pub async fn check_searxng_health(
         .await
     {
         Ok(resp) => {
-            if let Ok(text) = resp.text().await {
-                if text.trim() == "OK" {
-                    return perform_search(searxng_base_url, circuit_breaker, "test", "text")
-                        .await
-                        .is_ok();
-                }
+            if let Ok(text) = resp.text().await
+                && text.trim() == "OK"
+            {
+                return perform_search(searxng_base_url, circuit_breaker, "test", "text")
+                    .await
+                    .is_ok();
             }
             false
         }
@@ -199,7 +199,11 @@ async fn perform_search(
             let err_msg = if status == reqwest::StatusCode::FORBIDDEN
                 || status == reqwest::StatusCode::TOO_MANY_REQUESTS
             {
-                format!("Search blocked ({} {}): SearXNG rate-limit or bot protection triggered. Try again later.", status.as_u16(), status.canonical_reason().unwrap_or("Forbidden"))
+                format!(
+                    "Search blocked ({} {}): SearXNG rate-limit or bot protection triggered. Try again later.",
+                    status.as_u16(),
+                    status.canonical_reason().unwrap_or("Forbidden")
+                )
             } else {
                 format!(
                     "Search service error ({} {}): The search backend returned an error.",

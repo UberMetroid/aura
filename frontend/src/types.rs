@@ -7,7 +7,6 @@ pub struct TextSearchResult {
     pub url: String,
 }
 
-
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub struct ChatMessage {
     pub role: String,

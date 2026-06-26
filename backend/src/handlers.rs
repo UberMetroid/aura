@@ -1,17 +1,17 @@
 use axum::{
+    Json,
     extract::{ConnectInfo, Query, State},
     http::{HeaderMap, StatusCode},
     response::{IntoResponse, Response},
-    Json,
 };
 use rand::Rng;
 use std::net::SocketAddr;
 use std::time::{Duration, Instant};
 use tracing::error;
 
+use crate::AppState;
 use crate::auth;
 use crate::inference;
-use crate::AppState;
 
 #[derive(serde::Deserialize)]
 pub struct SearchQueryParams {
@@ -148,15 +148,12 @@ pub async fn handle_verify_pin(
         let session_id = auth::generate_session_id();
         state.auth.active_sessions.insert(session_id.clone());
 
-        let cookie = axum_extra::extract::cookie::Cookie::build((
-            "AURA_PIN",
-            session_id,
-        ))
-        .http_only(true)
-        .secure(is_secure)
-        .same_site(axum_extra::extract::cookie::SameSite::Strict)
-        .path("/")
-        .build();
+        let cookie = axum_extra::extract::cookie::Cookie::build(("AURA_PIN", session_id))
+            .http_only(true)
+            .secure(is_secure)
+            .same_site(axum_extra::extract::cookie::SameSite::Strict)
+            .path("/")
+            .build();
 
         let updated_jar = cookie_jar.add(cookie);
 

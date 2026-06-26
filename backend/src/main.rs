@@ -1,16 +1,16 @@
 use axum::{
+    Router,
     http::HeaderValue,
     middleware,
     response::Response,
     routing::{get, post},
-    Router,
 };
 use std::net::SocketAddr;
 use std::sync::Arc;
 use tower_http::compression::CompressionLayer;
 use tower_http::services::ServeDir;
 use tracing::info;
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, Layer};
+use tracing_subscriber::{Layer, layer::SubscriberExt, util::SubscriberInitExt};
 
 mod auth;
 mod circuit_breaker;
@@ -19,8 +19,8 @@ mod duckduckgo;
 mod grokipedia;
 mod handlers;
 mod inference;
-mod merged;
 mod invoke;
+mod merged;
 mod search;
 mod searxng;
 mod status;
@@ -139,9 +139,18 @@ async fn main() {
         .route("/search/text", get(handlers::handle_search_text))
         .route("/search/images", get(handlers::handle_search_images))
         .route("/inference", post(handlers::handle_inference_endpoint))
-        .route("/api/generate-invoke-image", post(invoke::handle_generate_invoke_image))
-        .route("/api/invoke-image-status/:item_id", get(invoke::handle_invoke_image_status))
-        .route("/api/invoke-image-file/:image_name", get(invoke::handle_invoke_image_file))
+        .route(
+            "/api/generate-invoke-image",
+            post(invoke::handle_generate_invoke_image),
+        )
+        .route(
+            "/api/invoke-image-status/:item_id",
+            get(invoke::handle_invoke_image_status),
+        )
+        .route(
+            "/api/invoke-image-file/:image_name",
+            get(invoke::handle_invoke_image_file),
+        )
         .layer(middleware::from_fn_with_state(
             auth.clone(),
             auth::rate_limit_middleware,
@@ -200,7 +209,9 @@ async fn response_headers_middleware(
     );
 
     if is_api {
-        if let Ok(val) = HeaderValue::from_str("no-store, no-cache, must-revalidate, proxy-revalidate") {
+        if let Ok(val) =
+            HeaderValue::from_str("no-store, no-cache, must-revalidate, proxy-revalidate")
+        {
             headers.insert("Cache-Control", val);
         }
     } else {

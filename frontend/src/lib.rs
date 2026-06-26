@@ -10,7 +10,7 @@ mod theme;
 mod types;
 
 use header::Header;
-use i18n::{translate, Locale, TransKey};
+use i18n::{Locale, TransKey, translate};
 use login::Login;
 use search_panel::SearchPanel;
 use types::{ChatCompletionRequest, ChatMessage, TextSearchResult};
@@ -39,22 +39,32 @@ pub fn App() -> impl IntoView {
 
     let (locale, set_locale) = create_signal({
         let storage = web_sys::window().and_then(|win| win.local_storage().ok().flatten());
-        let lang = storage.and_then(|s| s.get_item("lang").ok().flatten()).unwrap_or_else(|| "en".to_string());
+        let lang = storage
+            .and_then(|s| s.get_item("lang").ok().flatten())
+            .unwrap_or_else(|| "en".to_string());
         Locale::from_str(&lang)
     });
 
     let (footer_notification, set_footer_notification) = create_signal(None::<(String, String)>);
     let (last_search, set_last_search) = create_signal(String::new());
 
-    create_effect(move |_| { if let Some(s) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) { let _ = s.set_item("lang", locale.get().to_str()); } });
+    create_effect(move |_| {
+        if let Some(s) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
+            let _ = s.set_item("lang", locale.get().to_str());
+        }
+    });
 
     let show_toast = move |msg: String, is_err: bool| {
-        set_footer_notification.set(Some((msg, if is_err { "error" } else { "success" }.to_string())));
-        gloo_timers::callback::Timeout::new(3000, move || set_footer_notification.set(None)).forget();
+        set_footer_notification.set(Some((
+            msg,
+            if is_err { "error" } else { "success" }.to_string(),
+        )));
+        gloo_timers::callback::Timeout::new(3000, move || set_footer_notification.set(None))
+            .forget();
     };
 
     create_effect(move |_| {
-        let set_theme = set_theme.clone();
+        let set_theme = set_theme;
         spawn_local(async move {
             if let Ok(st) = api::check_auth_status().await {
                 set_access_key_required.set(st.pin_required);
@@ -62,7 +72,9 @@ pub fn App() -> impl IntoView {
                 set_enable_translation.set(st.enable_translation);
                 set_enable_themes.set(st.enable_themes);
                 set_enable_print.set(st.enable_print);
-                if !st.enable_themes { set_theme.set("tourian".to_string()); }
+                if !st.enable_themes {
+                    set_theme.set("tourian".to_string());
+                }
             } else {
                 let err = translate(TransKey::ConnectionError, locale.get());
                 set_error_message.set(err.clone());
@@ -74,7 +86,9 @@ pub fn App() -> impl IntoView {
     let on_submit_password = move |ev: ev::SubmitEvent| {
         ev.prevent_default();
         let password = access_key_input.get();
-        if password.is_empty() { return; }
+        if password.is_empty() {
+            return;
+        }
         spawn_local(async move {
             set_is_loading.set(true);
             set_error_message.set(String::new());
@@ -88,7 +102,10 @@ pub fn App() -> impl IntoView {
                 show_toast(err.clone(), true);
             } else {
                 set_is_authorized.set(true);
-                show_toast(translate(TransKey::AuthenticatedSuccess, locale.get()), false);
+                show_toast(
+                    translate(TransKey::AuthenticatedSuccess, locale.get()),
+                    false,
+                );
             }
             set_is_loading.set(false);
         });
@@ -110,7 +127,12 @@ pub fn App() -> impl IntoView {
             set_last_search.set(query.clone());
 
             if invoke_image.get_untracked().is_none() && !invoke_loading.get_untracked() {
-                api_invoke::spawn_invoke_generation(query.clone(), set_invoke_image, set_invoke_loading, set_invoke_error);
+                api_invoke::spawn_invoke_generation(
+                    query.clone(),
+                    set_invoke_image,
+                    set_invoke_loading,
+                    set_invoke_error,
+                );
             }
             match api::search_text(&query).await {
                 Ok(mapped) => {
@@ -118,49 +140,77 @@ pub fn App() -> impl IntoView {
                     set_is_loading.set(false);
                     if !mapped.is_empty() {
                         set_is_generating.set(true);
-                        let mut ctx = String::from("You are a direct, concise AI assistant. Answer the user's query briefly by providing an overview using ONLY the search results below.\n\n\
+                        let mut ctx = String::from(
+                            "You are a direct, concise AI assistant. Answer the user's query briefly by providing an overview using ONLY the search results below.\n\n\
                         Rules:\n\
                         1. Do not use conversational filler, greetings, pleasantries, or introductory preamble.\n\
                         2. Keep the answer extremely brief and to the point.\n\
                         3. CRITICAL: Do not ask the user any follow-up questions, suggest next steps, or prompt for more input. Stop speaking immediately after answering the query.\n\
                         4. Do NOT prepend your response with 'AI Assistant:', 'AI:', 'Overview:', or any other speaker label prefix.\n\
                         5. Do NOT use any Markdown formatting (such as bold asterisks or lists) in your response.\n\n\
-                        Search results:\n\n");
+                        Search results:\n\n",
+                        );
                         for (i, res) in mapped.iter().enumerate() {
-                            ctx.push_str(&format!("{}. [{}]({}): {}\n", i + 1, res.title, res.url, res.snippet));
+                            ctx.push_str(&format!(
+                                "{}. [{}]({}): {}\n",
+                                i + 1,
+                                res.title,
+                                res.url,
+                                res.snippet
+                            ));
                         }
                         let chat_req = ChatCompletionRequest {
                             messages: vec![
-                                ChatMessage { role: "system".to_string(), content: ctx },
-                                ChatMessage { role: "user".to_string(), content: query.clone() },
+                                ChatMessage {
+                                    role: "system".to_string(),
+                                    content: ctx,
+                                },
+                                ChatMessage {
+                                    role: "user".to_string(),
+                                    content: query.clone(),
+                                },
                             ],
                         };
                         if let Err(e) = api::stream_inference(&chat_req, move |content| {
                             let mut current = ai_response.get();
-                            current.push_str(&content);
+                            current.push_str(content);
                             set_ai_response.set(api_invoke::strip_speaker_labels(&current));
-                        }).await {
-                            if e == "Unauthorized" { set_is_authorized.set(false); } else { show_toast(e, true); }
+                        })
+                        .await
+                        {
+                            if e == "Unauthorized" {
+                                set_is_authorized.set(false);
+                            } else {
+                                show_toast(e, true);
+                            }
                         }
                         set_is_generating.set(false);
                     }
                 }
                 Err(e) => {
-                    if e == "Unauthorized" { set_is_authorized.set(false); }
-                    else { show_toast(translate(TransKey::ConnectionError, locale.get()), true); }
+                    if e == "Unauthorized" {
+                        set_is_authorized.set(false);
+                    } else {
+                        show_toast(translate(TransKey::ConnectionError, locale.get()), true);
+                    }
                     set_is_loading.set(false);
                 }
             }
         });
     };
 
-    let on_search = move |ev: ev::SubmitEvent| { ev.prevent_default(); perform_search(); };
+    let on_search = move |ev: ev::SubmitEvent| {
+        ev.prevent_default();
+        perform_search();
+    };
 
-    let logout = move || spawn_local(async move {
-        let _ = api::logout().await;
-        set_is_authorized.set(false);
-        show_toast(translate(TransKey::LoggedOutSuccess, locale.get()), false);
-    });
+    let logout = move || {
+        spawn_local(async move {
+            let _ = api::logout().await;
+            set_is_authorized.set(false);
+            show_toast(translate(TransKey::LoggedOutSuccess, locale.get()), false);
+        })
+    };
 
     view! {
         <div class="app-container">

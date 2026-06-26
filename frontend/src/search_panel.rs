@@ -1,4 +1,4 @@
-use crate::i18n::{translate, Locale, TransKey};
+use crate::i18n::{Locale, TransKey, translate};
 use crate::types::TextSearchResult;
 use leptos::*;
 
@@ -114,4 +114,3 @@ where
         </main>
     }
 }
-

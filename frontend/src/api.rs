@@ -107,10 +107,10 @@ pub async fn search_text(query: &str) -> Result<Vec<TextSearchResult>, String> {
         return Err("Unauthorized".to_string());
     }
     if !resp.ok() {
-        if let Ok(err_val) = resp.json::<serde_json::Value>().await {
-            if let Some(err_str) = err_val.get("error").and_then(|v| v.as_str()) {
-                return Err(err_str.to_string());
-            }
+        if let Ok(err_val) = resp.json::<serde_json::Value>().await
+            && let Some(err_str) = err_val.get("error").and_then(|v| v.as_str())
+        {
+            return Err(err_str.to_string());
         }
         return Err(format!(
             "Search request failed with status {}",
@@ -199,14 +199,12 @@ where
                 if line == "data: [DONE]" {
                     break;
                 }
-                if let Some(json_str) = line.strip_prefix("data: ") {
-                    if let Ok(parsed) = serde_json::from_str::<crate::types::SseChunk>(json_str) {
-                        if let Some(choice) = parsed.choices.first() {
-                            if let Some(ref content) = choice.delta.content {
-                                on_chunk(content);
-                            }
-                        }
-                    }
+                if let Some(json_str) = line.strip_prefix("data: ")
+                    && let Ok(parsed) = serde_json::from_str::<crate::types::SseChunk>(json_str)
+                    && let Some(choice) = parsed.choices.first()
+                    && let Some(ref content) = choice.delta.content
+                {
+                    on_chunk(content);
                 }
             }
         }

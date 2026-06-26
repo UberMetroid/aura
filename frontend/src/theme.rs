@@ -30,13 +30,12 @@ pub fn use_theme() -> (ReadSignal<String>, WriteSignal<String>, impl Fn() + Clon
         if let Some(s) = storage {
             let _ = s.set_item("theme", next_theme);
         }
-        if let Some(win) = web_sys::window() {
-            if let Some(doc) = win.document() {
-                if let Some(el) = doc.document_element() {
-                    let _ = el.set_attribute("data-theme", next_theme);
-                    let _ = el.set_attribute("class", next_theme);
-                }
-            }
+        if let Some(win) = web_sys::window()
+            && let Some(doc) = win.document()
+            && let Some(el) = doc.document_element()
+        {
+            let _ = el.set_attribute("data-theme", next_theme);
+            let _ = el.set_attribute("class", next_theme);
         }
         set_theme.set(next_theme.to_string());
     };
@@ -44,13 +43,12 @@ pub fn use_theme() -> (ReadSignal<String>, WriteSignal<String>, impl Fn() + Clon
     // Apply active theme on boot
     create_effect(move |_| {
         let cur_theme = theme.get();
-        if let Some(win) = web_sys::window() {
-            if let Some(doc) = win.document() {
-                if let Some(el) = doc.document_element() {
-                    let _ = el.set_attribute("data-theme", &cur_theme);
-                    let _ = el.set_attribute("class", &cur_theme);
-                }
-            }
+        if let Some(win) = web_sys::window()
+            && let Some(doc) = win.document()
+            && let Some(el) = doc.document_element()
+        {
+            let _ = el.set_attribute("data-theme", &cur_theme);
+            let _ = el.set_attribute("class", &cur_theme);
         }
     });
 

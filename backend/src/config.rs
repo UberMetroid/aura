@@ -31,11 +31,7 @@ impl Config {
         let pin = env::var("AURA_PIN")
             .or_else(|_| env::var("PIN"))
             .ok()
-            .filter(|p| {
-                !p.is_empty()
-                    && p.len() >= 4
-                    && p.len() <= 64
-            });
+            .filter(|p| !p.is_empty() && p.len() >= 4 && p.len() <= 64);
 
         let max_attempts = env::var("MAX_ATTEMPTS")
             .ok()
@@ -47,10 +43,12 @@ impl Config {
             .unwrap_or(true);
 
         let enable_themes = env::var("ENABLE_THEMES")
-            .map(|v| v == "true" || v == "on").unwrap_or(false);
+            .map(|v| v == "true" || v == "on")
+            .unwrap_or(false);
 
         let enable_print = env::var("ENABLE_PRINT")
-            .map(|v| v == "true" || v == "on").unwrap_or(false);
+            .map(|v| v == "true" || v == "on")
+            .unwrap_or(false);
 
         let searxng_base_url =
             env::var("SEARXNG_BASE_URL").unwrap_or_else(|_| "http://127.0.0.1:8888".to_string());
