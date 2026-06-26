@@ -1,7 +1,11 @@
 [package]
-name = "rust-search"
+name = "backend"
 version = "2.0.0"
 edition = "2021"
+
+[[bin]]
+name = "backend"
+path = "src/main.rs"
 
 [dependencies]
 tokio = { version = "1", features = ["full"] }

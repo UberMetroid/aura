@@ -65,12 +65,12 @@
           doCheck = false;
 
           buildPhase = ''
-            cargo build --release --bin rust-search
+            cargo build --release --bin backend
           '';
 
           installPhase = ''
             mkdir -p $out/bin
-            cp target/release/rust-search $out/bin/rust-search
+            cp target/release/backend $out/bin/backend
           '';
         };
 
@@ -82,7 +82,7 @@
           fi
           export SEARXNG_SETTINGS_PATH=/app/searxng-settings.yml
           ${pkgs.searxng}/bin/searxng-run > /dev/null 2>&1 &
-          exec ${backend}/bin/rust-search
+          exec ${backend}/bin/backend
         '';
 
         # 4. Create the layered Docker container image

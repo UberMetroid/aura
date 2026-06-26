@@ -12,7 +12,7 @@ FROM rust:1.96-alpine AS backend-builder
 RUN apk add --no-cache musl-dev git
 WORKDIR /app
 COPY . .
-RUN cargo build --release --bin rust-search
+RUN cargo build --release --bin backend
 
 # Stage 3: Runner stage
 FROM alpine:latest
@@ -65,7 +65,7 @@ RUN git clone https://github.com/searxng/searxng.git /usr/local/searxng/searxng-
 RUN apk del .build-deps
 
 # Copy compiled backend from Stage 2
-COPY --from=backend-builder /app/target/release/rust-search /usr/local/bin/rust-search
+COPY --from=backend-builder /app/target/release/backend /usr/local/bin/backend
 
 # Copy compiled frontend from Stage 1 to a permanent location outside of possible dev volumes
 COPY --from=frontend-builder /app/frontend/dist /var/www/aura
@@ -77,10 +77,10 @@ ENV NODE_ENV=production
 ENV LOG_DIR=/app/log
 
 # Set execute permissions
-RUN chmod +x /usr/local/bin/rust-search
+RUN chmod +x /usr/local/bin/backend
 
 # Healthcheck on the Rust server status endpoint
 HEALTHCHECK --interval=5m CMD curl -f http://localhost:4408/status || exit 1
 
 # Start SearXNG in background and Aura server in foreground
-CMD ["/bin/sh", "-c", "(cd /usr/local/searxng/searxng-src && /usr/local/searxng/searxng-venv/bin/python -m searx.webapp > /dev/null 2>&1) & rust-search"]
+CMD ["/bin/sh", "-c", "(cd /usr/local/searxng/searxng-src && /usr/local/searxng/searxng-venv/bin/python -m searx.webapp > /dev/null 2>&1) & backend"]
