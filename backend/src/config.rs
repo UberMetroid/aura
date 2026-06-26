@@ -43,12 +43,10 @@ impl Config {
             .unwrap_or(true);
 
         let enable_themes = env::var("ENABLE_THEMES")
-            .map(|v| v != "false" && v != "off")
-            .unwrap_or(true);
+            .map(|v| v == "true" || v == "on").unwrap_or(false);
 
         let enable_print = env::var("ENABLE_PRINT")
-            .map(|v| v != "false" && v != "off")
-            .unwrap_or(true);
+            .map(|v| v == "true" || v == "on").unwrap_or(false);
 
         let searxng_base_url =
             env::var("SEARXNG_BASE_URL").unwrap_or_else(|_| "http://127.0.0.1:8888".to_string());
