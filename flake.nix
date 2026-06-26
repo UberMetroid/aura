@@ -23,7 +23,7 @@
         # 1. Build the WASM frontend
         frontend = rustPlatform.buildRustPackage {
           pname = "aura-frontend";
-          version = "1.0.0";
+          version = "2.0.0";
           src = ./.;
 
           cargoLock = {
@@ -52,7 +52,7 @@
         # 2. Build the Axum backend
         backend = rustPlatform.buildRustPackage {
           pname = "aura-backend";
-          version = "1.0.0";
+          version = "2.0.0";
           src = ./.;
 
           cargoLock = {
