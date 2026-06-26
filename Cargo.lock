@@ -216,6 +216,34 @@ dependencies = [
 ]
 
 [[package]]
+name = "backend"
+version = "2.0.0"
+dependencies = [
+ "argon2",
+ "axum",
+ "axum-extra",
+ "base64",
+ "bytes",
+ "chrono",
+ "dashmap",
+ "dotenvy",
+ "futures-util",
+ "once_cell",
+ "percent-encoding",
+ "rand 0.8.6",
+ "regex",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "sha2",
+ "tokio",
+ "tower 0.4.13",
+ "tower-http 0.5.2",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "base64"
 version = "0.22.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1978,34 +2006,6 @@ dependencies = [
  "syn",
  "syn_derive",
  "thiserror 1.0.69",
-]
-
-[[package]]
-name = "rust-search"
-version = "2.0.0"
-dependencies = [
- "argon2",
- "axum",
- "axum-extra",
- "base64",
- "bytes",
- "chrono",
- "dashmap",
- "dotenvy",
- "futures-util",
- "once_cell",
- "percent-encoding",
- "rand 0.8.6",
- "regex",
- "reqwest",
- "serde",
- "serde_json",
- "sha2",
- "tokio",
- "tower 0.4.13",
- "tower-http 0.5.2",
- "tracing",
- "tracing-subscriber",
 ]
 
 [[package]]

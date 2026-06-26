@@ -24,11 +24,12 @@ pub struct VerifyPinRequest {
     pub pin: String,
 }
 
-pub async fn handle_status(State(state): State<AppState>) -> impl IntoResponse {
+pub async fn handle_status(State(state): State<AppState>) -> Response {
     state
         .status
         .get_status_response(&state.auth, &state.search)
         .await
+        .into_response()
 }
 
 pub async fn handle_pin_required(
