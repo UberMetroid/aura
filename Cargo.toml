@@ -1,3 +1,13 @@
 [workspace]
 resolver = "2"
 members = ["backend", "frontend"]
+
+[profile.release]
+opt-level = 3          # Optimize for maximum speed
+lto = true             # Enable Link-Time Optimization
+codegen-units = 1      # Reduce parallel codegen for better optimizations
+panic = "abort"        # Disable unwinding for smaller binary sizes
+strip = true           # Strip all symbols and debug info
+
+[profile.release.package.frontend]
+opt-level = "z"        # Specifically optimize the frontend WASM for size

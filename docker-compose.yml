@@ -1,15 +1,23 @@
 services:
-  development-server:
-    environment:
-      - HOST=${HOST:-0.0.0.0}
-      - PORT=${PORT:-4408}
-      - ACCESS_KEYS=${ACCESS_KEYS:-}
-      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://localhost:11434}
-      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3}
+  aura:
+    build: .
+    image: ubermetroid/aura:latest
+    container_name: aura
+    restart: unless-stopped
     ports:
-      - "${PORT:-4408}:4408"
-    build:
-      dockerfile: Dockerfile
-      context: .
+      - ${PORT:-4408}:4408
     volumes:
-      - .:/app/
+      - ${AURA_DATA_PATH:-./data}:/app/data
+    environment:
+      PORT: 4408
+      SITE_TITLE: ${AURA_SITE_TITLE:-Aura}
+      AURA_PIN: ${AURA_PIN:-}
+      BASE_URL: ${AURA_BASE_URL:-http://localhost:4408}
+      ALLOWED_ORIGINS: ${AURA_ALLOWED_ORIGINS:-*}
+      TZ: ${TZ:-UTC}
+      ENABLE_TRANSLATION: ${ENABLE_TRANSLATION:-false}
+      ENABLE_THEMES: ${ENABLE_THEMES:-true}
+      ENABLE_PRINT: ${ENABLE_PRINT:-true}
+      MAX_ATTEMPTS: ${MAX_ATTEMPTS:-5}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://localhost:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3}
