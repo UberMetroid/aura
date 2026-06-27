@@ -76,18 +76,17 @@ pub async fn fetch_thumbnail_as_data_url(
     Ok(format!("data:{};base64,{}", content_type, b64))
 }
 
+/// Emit a structured error to the tracing stack at `ERROR` level.
+///
+/// Previously this function wrote to `aura-errors.log` at the process
+/// working directory, which is a deployment-dependent location (and inside
+/// the Nix container it's read-only). The tracing stack initialized in
+/// `main.rs` already routes errors to `error.log` (when `LOG_DIR` is set)
+/// and to stderr, so this function is now a thin wrapper around
+/// `tracing::error!`. Existing call sites continue to compile because the
+/// signature is unchanged.
 pub fn log_error_to_file(context: &str, error_msg: &str) {
-    use std::fs::OpenOptions;
-    use std::io::Write;
-    let time_str = chrono::Utc::now().to_rfc3339();
-    let log_line = format!("[{}] {}: {}\n", time_str, context, error_msg);
-    if let Ok(mut file) = OpenOptions::new()
-        .create(true)
-        .append(true)
-        .open("aura-errors.log")
-    {
-        let _ = file.write_all(log_line.as_bytes());
-    }
+    tracing::error!(target: "upstream", context = %context, error = %error_msg);
 }
 
 pub fn map_reqwest_error(e: reqwest::Error, url: &str) -> String {
@@ -119,5 +118,58 @@ pub fn map_reqwest_error(e: reqwest::Error, url: &str) -> String {
             "HTTP Connection Error: Failed to request search service at '{}'. details: {}",
             url, msg
         )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Golden output for the HTML→text converter: tags are stripped and
+    /// the common named entities are decoded.
+    #[test]
+    fn html_to_text_strips_tags_and_decodes_entities() {
+        let html = "<p>Hello <b>world</b> &amp; goodbye &lt;tag&gt; &#39;quoted&#39;</p>";
+        let text = html_to_text(html.to_string());
+        assert_eq!(text, "Hello world & goodbye <tag> 'quoted'");
+    }
+
+    /// Tags that span newlines still strip correctly. The implementation
+    /// walks character-by-character so any character outside `<…>` is kept.
+    #[test]
+    fn html_to_text_preserves_whitespace_outside_tags() {
+        let html = "<div>line1\nline2</div>";
+        let text = html_to_text(html.to_string());
+        assert_eq!(text, "line1\nline2");
+    }
+
+    /// Entities are decoded but unknown entities pass through verbatim.
+    /// This is intentional: a fully-conformant HTML entity decoder is out
+    /// of scope for this utility.
+    #[test]
+    fn html_to_text_passes_through_unknown_entities() {
+        let html = "a &unknown; b";
+        let text = html_to_text(html.to_string());
+        assert_eq!(text, "a &unknown; b");
+    }
+
+    /// `process_snippet` returns empty string when the input starts with
+    /// `[data:image` (a base64 thumbnail marker). This is how Aura filters
+    /// out embedded thumbnail data from search snippets.
+    #[test]
+    fn process_snippet_filters_data_image_prefix() {
+        let snippet = "[data:image/png;base64,iVBORw0KGgo=]";
+        assert_eq!(process_snippet(snippet), "");
+    }
+
+    /// `process_snippet` strips emojis from the snippet body.
+    #[test]
+    fn process_snippet_strips_emojis() {
+        let snippet = "Hello \u{1F600} world \u{1F4A9}";
+        let result = process_snippet(snippet);
+        assert!(!result.contains('\u{1F600}'));
+        assert!(!result.contains('\u{1F4A9}'));
+        assert!(result.contains("Hello"));
+        assert!(result.contains("world"));
     }
 }

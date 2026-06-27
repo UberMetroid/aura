@@ -151,3 +151,41 @@ pub async fn rate_limit_middleware(
 
     Ok(next.run(req).await)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Identical strings compare equal.
+    #[test]
+    fn secure_compare_matches_equal_strings() {
+        assert!(secure_compare("hunter2", "hunter2"));
+    }
+
+    /// Different-length strings compare unequal without panicking.
+    #[test]
+    fn secure_compare_rejects_different_lengths() {
+        assert!(!secure_compare("hunter2", "hunter"));
+        assert!(!secure_compare("hunter", "hunter2"));
+    }
+
+    /// Single-byte difference returns false.
+    #[test]
+    fn secure_compare_rejects_single_bit_flip() {
+        assert!(!secure_compare("hunter2", "hunter3"));
+    }
+
+    /// Empty strings compare equal (both zero-length, no XOR diff).
+    #[test]
+    fn secure_compare_handles_empty_strings() {
+        assert!(secure_compare("", ""));
+    }
+
+    /// Non-ASCII content works: secure_compare operates on bytes, so
+    /// unicode is supported as long as the byte length matches.
+    #[test]
+    fn secure_compare_supports_non_ascii() {
+        assert!(secure_compare("caf\u{00e9}", "caf\u{00e9}"));
+        assert!(!secure_compare("caf\u{00e9}", "cafe"));
+    }
+}
